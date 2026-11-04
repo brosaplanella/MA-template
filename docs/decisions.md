@@ -3,6 +3,17 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-04: palette
+
+- Brand colours in `_shared/palette.yml` (purple, lavender, coral, blue, green, yellow, black),
+  given at 100%. Tints = mix with white in sRGB (matches the brand guide to within rounding).
+- "Aubergine" is called purple, as in the brand guide.
+- Body text keeps the default black (not brand black `#0C0C0C`).
+- Accent: purple; dark-mode accent: brand lavender (6.4:1 on darkly), replacing the
+  provisional `#BB99E6`. Alert red stays non-brand (`#B00020` / `#FF6B81`).
+- LaTeX/CSS names are prefixed `brand-`, because xcolor already defines blue, green, purple, black.
+- `scripts/palette.py` generates `_shared/generated/` (committed) and runs as a pre-render hook.
+
 ## 2026-11-04: implementation choices in v0.1-core (for review)
 
 - **Layout**: two Quarto projects, `notes/` (book) and `sheets/` (problem sheets and

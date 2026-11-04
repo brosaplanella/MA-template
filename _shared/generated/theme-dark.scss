@@ -1,0 +1,50 @@
+/*-- scss:defaults --*/
+// Generated from _shared/palette.yml by scripts/palette.py: do not edit.
+// Dark theme, on top of Bootswatch darkly.
+$accent: #A499F4;
+$primary: #440379;
+$link-color: $accent;
+$headings-color: $accent;
+
+/*-- scss:rules --*/
+:root {
+  --brand-purple: #440379;
+  --brand-purple-80: #693594;
+  --brand-purple-60: #8F68AF;
+  --brand-purple-40: #B49AC9;
+  --brand-purple-20: #DACDE4;
+  --brand-lavender: #A499F4;
+  --brand-lavender-80: #B6ADF6;
+  --brand-lavender-60: #C8C2F8;
+  --brand-lavender-40: #DBD6FB;
+  --brand-lavender-20: #EDEBFD;
+  --brand-coral: #F1977F;
+  --brand-coral-80: #F4AC99;
+  --brand-coral-60: #F7C1B2;
+  --brand-coral-40: #F9D5CC;
+  --brand-coral-20: #FCEAE5;
+  --brand-blue: #6CB7FF;
+  --brand-blue-80: #89C5FF;
+  --brand-blue-60: #A7D4FF;
+  --brand-blue-40: #C4E2FF;
+  --brand-blue-20: #E2F1FF;
+  --brand-green: #51D7C1;
+  --brand-green-80: #74DFCD;
+  --brand-green-60: #97E7DA;
+  --brand-green-40: #B9EFE6;
+  --brand-green-20: #DCF7F3;
+  --brand-yellow: #FEDE7B;
+  --brand-yellow-80: #FEE595;
+  --brand-yellow-60: #FEEBB0;
+  --brand-yellow-40: #FFF2CA;
+  --brand-yellow-20: #FFF8E5;
+  --brand-black: #0C0C0C;
+  --brand-black-80: #3D3D3D;
+  --brand-black-60: #6D6D6D;
+  --brand-black-40: #9E9E9E;
+  --brand-black-20: #CECECE;
+  --accent: #A499F4;
+  --accent-soft: #32303B;
+  --accent-border: #635E8B;
+  --alert: #FF6B81;
+}

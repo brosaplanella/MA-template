@@ -9,6 +9,7 @@
 project:
   type: default
   output-dir: ../_build/student/sheets
+  pre-render: ../scripts/palette.py   # colours from _shared/palette.yml
   render:
     - "problem-sheets/*/*.qmd"
     - "assignments/*/*.qmd"
@@ -38,14 +39,15 @@ format:
     template-partials:
       - ../_shared/partials/before-body.tex
     include-in-header:
+      - ../_shared/generated/palette.tex
       - ../_shared/preamble.tex
       - ../_shared/preamble-sheet.tex
   html:
     embed-resources: true   # one self-contained .html file per sheet (easy to upload to Moodle)
     html-math-method: mathjax
     theme:
-      light: [flatly, ../_shared/theme-light.scss]
-      dark: [darkly, ../_shared/theme-dark.scss]
+      light: [flatly, ../_shared/generated/theme-light.scss]
+      dark: [darkly, ../_shared/generated/theme-dark.scss]
     css: ../_shared/style.css
     toc: false
     format-links: false     # no "PDF" link: each file is uploaded on its own
