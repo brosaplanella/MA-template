@@ -1,10 +1,9 @@
 % LaTeX settings shared by the notes and the sheets (PDF output only).
 % amsmath, amssymb, graphicx, xcolor and hyperref are already loaded by Quarto.
-% HTML equivalents of the colours and boxes are in style.css; keep them in sync.
+% HTML equivalents of the boxes are in style.css; keep them in sync.
 
-% Module colours (the HTML ones are in theme-light.scss / theme-dark.scss)
-\definecolor{accent}{HTML}{440379}   % Warwick aubergine
-\definecolor{alert}{HTML}{B00020}
+% Colours (accent, alert, brand-*) are defined in generated/palette.tex, made from
+% palette.yml and included before this file.
 
 \usepackage{tcolorbox}
 \tcbuselibrary{most}

@@ -17,8 +17,10 @@ _shared/
   sheet.lua        {{< sheet key >}} shortcode
   common.lua       config loading + sheet identification (used by both .lua files)
   macros.tex       maths macros, injected into PDF and HTML
+  palette.yml      brand colours + roles (accent, alert); source for generated/
+  generated/       palette.tex, theme-light.scss, theme-dark.scss (from scripts/palette.py; committed, do not edit)
   preamble*.tex    LaTeX (common / notes / sheet); partials/before-body.tex = sheet title block
-  theme-*.scss, style.css   HTML styling
+  style.css        HTML styling (uses --accent, --brand-* from generated/)
   header-*.qmd     editable header boxes, included by sheets
 notes/             Quarto book project -> _build/student/notes
 sheets/            Quarto default project; profiles: student (default), staff
@@ -28,6 +30,7 @@ scripts/
   leak_check.py    checks _build/student for staff/unreleased material
   post_render_student.py / post_render_staff.py   Quarto hooks
   build.py, make_upload.py
+  palette.py       palette.yml -> _shared/generated/ (pre-render hook of both projects)
 docs/              development notes for the template (brief, audit, decisions)
 reference/         read-only reference modules (gitignored); never modify
 ```

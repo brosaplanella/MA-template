@@ -1,5 +1,5 @@
 /* HTML styling shared by the notes and the sheets. Colours come from the
-   --accent variables set in theme-light.scss / theme-dark.scss. */
+   --accent and --brand-* variables in generated/theme-*.scss (from palette.yml). */
 .center {
   text-align: center;
 }

@@ -119,6 +119,14 @@ Sheet features (see the examples):
 | `::: {.infobox}` | a framed box |
 | `{{< sheet deadline >}}` | a setting from `_module.yml` for this sheet |
 
+### Colours
+
+All colours are defined once in [`_shared/palette.yml`](_shared/palette.yml) (Warwick brand
+colours at 100%; tints of 80, 60, 40 and 20% are generated). Use them as `\color{brand-coral-60}`
+in LaTeX or `var(--brand-coral-60)` in CSS. The `roles` section sets what the template uses:
+the accent (headings, marks, boxes, links) is purple, and lavender in dark mode. Only purple
+is dark enough for text on white; use the other colours for fills and highlights.
+
 ### Settings on your computer only
 
 Create `_local.yml` (not committed) to override anything in `_module.yml` on your machine.

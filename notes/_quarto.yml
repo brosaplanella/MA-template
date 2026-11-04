@@ -4,6 +4,7 @@
 project:
   type: book
   output-dir: ../_build/student/notes
+  pre-render: ../scripts/palette.py   # colours from _shared/palette.yml
 
 book:
   title: "MA000 Example Module"   # keep in step with module.code/title in _module.yml
@@ -30,8 +31,8 @@ format:
     toc: true
     html-math-method: mathjax
     theme:
-      light: [flatly, ../_shared/theme-light.scss]
-      dark: [darkly, ../_shared/theme-dark.scss]
+      light: [flatly, ../_shared/generated/theme-light.scss]
+      dark: [darkly, ../_shared/generated/theme-dark.scss]
     css: ../_shared/style.css
   pdf:
     documentclass: scrbook
@@ -46,5 +47,6 @@ format:
     urlcolor: accent
     citecolor: accent
     include-in-header:
+      - ../_shared/generated/palette.tex
       - ../_shared/preamble.tex
       - ../_shared/preamble-notes.tex
