@@ -77,6 +77,8 @@ def build(tex: Path) -> bool:
     if result.returncode != 0 or not svg.exists():
         print(f"FAILED {svg.relative_to(ROOT).as_posix()} (dvisvgm):\n  {result.stderr.strip()[-500:]}")
         return False
+    # dvisvgm writes CRLF on Windows; use LF everywhere so git sees no change
+    svg.write_bytes(svg.read_bytes().replace(b"\r\n", b"\n"))
     print(f"Figure: {tex.relative_to(ROOT).as_posix()} -> .pdf, .svg")
     return True
 
