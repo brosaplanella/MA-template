@@ -48,16 +48,12 @@ h2 .marks-total {
   color: var(--accent);
 }
 
-.spring {
+/* A module's own icon (difficulty-icon: path to an image): inlined SVG, 1em tall */
+.difficulty-image svg {
   height: 1em;
-  width: 0.48em;
+  width: auto;
   margin: 0 0.04em;
-  vertical-align: -0.12em;
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.1;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+  vertical-align: -0.15em;
 }
 
 /* [text]{.marking} and ::: {.marking}: notes for markers (staff builds only) */
