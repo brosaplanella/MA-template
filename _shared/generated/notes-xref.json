@@ -1,0 +1,122 @@
+{
+ "eq-example-aligned-equation": {
+  "name": "Equation",
+  "number": "2.2",
+  "page": "chapter2.html"
+ },
+ "eq-example-equation": {
+  "name": "Equation",
+  "number": "2.1",
+  "page": "chapter2.html"
+ },
+ "eq-example-gathered-equation": {
+  "name": "Equation",
+  "number": "2.3",
+  "page": "chapter2.html"
+ },
+ "fig-energyplot": {
+  "name": "Figure",
+  "number": "3.1",
+  "page": "chapter3.html"
+ },
+ "fig-geometry": {
+  "name": "Figure",
+  "number": "2.1",
+  "page": "chapter2.html"
+ },
+ "lst-my-first-function": {
+  "name": "Listing",
+  "number": "3.1",
+  "page": "chapter3.html"
+ },
+ "sec-adv": {
+  "name": "Chapter",
+  "number": "3",
+  "page": "chapter3.html"
+ },
+ "sec-adv-code-blocks": {
+  "name": "Section",
+  "number": "3.1",
+  "page": "chapter3.html"
+ },
+ "sec-adv-final": {
+  "name": "Section",
+  "number": "3.3",
+  "page": "chapter3.html"
+ },
+ "sec-adv-videos": {
+  "name": "Section",
+  "number": "3.2",
+  "page": "chapter3.html"
+ },
+ "sec-callout-blocks": {
+  "name": "Section",
+  "number": "2.7",
+  "page": "chapter2.html"
+ },
+ "sec-ex": {
+  "name": "Chapter",
+  "number": "2",
+  "page": "chapter2.html"
+ },
+ "sec-ex-basic-formatting": {
+  "name": "Section",
+  "number": "2.3",
+  "page": "chapter2.html"
+ },
+ "sec-ex-equations": {
+  "name": "Section",
+  "number": "2.4",
+  "page": "chapter2.html"
+ },
+ "sec-ex-figures": {
+  "name": "Section",
+  "number": "2.6",
+  "page": "chapter2.html"
+ },
+ "sec-ex-learning-objectives": {
+  "name": "Section",
+  "number": "2.1",
+  "page": "chapter2.html"
+ },
+ "sec-ex-sections-and-subsections": {
+  "name": "Section",
+  "number": "2.2",
+  "page": "chapter2.html"
+ },
+ "sec-ex-theorems": {
+  "name": "Section",
+  "number": "2.5",
+  "page": "chapter2.html"
+ },
+ "sec-intro": {
+  "name": "Chapter",
+  "number": "1",
+  "page": "chapter1.html"
+ },
+ "sec-intro-aims": {
+  "name": "Section",
+  "number": "1.2",
+  "page": "chapter1.html"
+ },
+ "sec-intro-editing": {
+  "name": "Section",
+  "number": "1.4",
+  "page": "chapter1.html"
+ },
+ "sec-intro-getting-started": {
+  "name": "Section",
+  "number": "1.3",
+  "page": "chapter1.html"
+ },
+ "sec-intro-moodle": {
+  "name": "Section",
+  "number": "1.5",
+  "page": "chapter1.html"
+ },
+ "thm-FTC": {
+  "name": "Theorem",
+  "number": "2.1",
+  "page": "chapter2.html"
+ }
+}

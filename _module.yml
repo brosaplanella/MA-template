@@ -12,6 +12,15 @@ module:
   title: "Example Module"
   term: "Term 1, 2026/27"
 
+# Lecture notes on Moodle, for {{< notes label >}} links in the HTML sheets. After the
+# first upload of the notes (see README), open the notes on Moodle and paste the address
+# of the page here; it looks like
+#   https://moodle.example.ac.uk/pluginfile.php/123456/mod_resource/content/1/notes/index.html
+# It stays valid when you upload a new version to the same File resource. Leave it empty
+# for no links (the PDF never links).
+notes:
+  url: ""
+
 # Icon for [1]{.difficulty} etc. in problem sheets: stars, numbers, or your own image:
 # its path without extension, relative to this folder, with .pdf and .svg versions
 # (e.g. a TikZ figure sheets/figs/spring.tex gives difficulty-icon: sheets/figs/spring)

@@ -123,6 +123,21 @@ Sheet features (see the examples):
 | `[note]{.marking}` or `::: {.marking}` | notes for markers (staff build only) |
 | `::: {.infobox}` | a framed box |
 | `{{< sheet deadline >}}` | a setting from `_module.yml` for this sheet |
+| `see {{< notes thm-FTC >}} of the lecture notes` | "see Theorem 2.1 of the lecture notes"; in HTML, a link to it in the notes on Moodle (see below) |
+
+### References to the notes
+
+`{{< notes label >}}` takes any cross-reference label from the notes (`sec-…`, `thm-…`,
+`eq-…`, `fig-…`, ...) and gives its name and number, e.g. "Section 2.3" or "Chapter 2". The
+numbers come from the last build of the notes (in `_shared/generated/notes-xref.json`, which
+you commit with the notes), so after changing the notes, rebuild them before the sheets;
+`uv run scripts/build.py` does this. An unknown label gives a warning and shows as
+**[label?]**.
+
+For links in the HTML sheets, upload the notes to Moodle once, open them there and copy the
+address of the page (it contains `pluginfile.php`) into `notes: url:` in `_module.yml`. The
+address stays the same when you upload new versions of the notes to the same File resource.
+The PDF sheets show the number only.
 
 ### Code and figures
 

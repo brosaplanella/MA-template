@@ -20,6 +20,8 @@ Evaluate the following integrals.
 
 (a) $\displaystyle \int_0^1 (3x^2 + 1) \, \mathrm{d}x$.
 
+    _Hint: use {{< notes thm-FTC >}} of the lecture notes._
+
 (b) $\displaystyle \int x \cos x \, \mathrm{d}x$.
 
     _Hint: use integration by parts._

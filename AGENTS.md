@@ -14,11 +14,12 @@ _module.yml        module settings, deadlines, release flags (committed)
 _local.yml         per-machine overrides (gitignored, optional)
 _shared/
   module.lua       main filter: macros, marks, marking, difficulty, release control, banner, marker
-  sheet.lua        {{< sheet key >}} shortcode
+  sheet.lua        {{< sheet key >}} and {{< notes label >}} shortcodes
   common.lua       config loading + sheet identification (used by both .lua files)
   macros.tex       maths macros, injected into PDF and HTML
   palette.yml      brand colours + roles (accent, alert); source for generated/
-  generated/       palette.tex, theme-light.scss, theme-dark.scss (from scripts/palette.py; committed, do not edit)
+  generated/       palette.tex, theme-light.scss, theme-dark.scss (from scripts/palette.py);
+                   notes-xref.json (from scripts/notes_xref.py); committed, do not edit
   preamble*.tex    LaTeX (common / notes / sheet); partials/before-body.tex = sheet title block
   style.css        HTML styling (uses --accent, --brand-* from generated/)
   header-*.qmd     editable header boxes, included by sheets
@@ -36,6 +37,8 @@ scripts/
   build.py, make_upload.py
   palette.py       palette.yml -> _shared/generated/ (pre-render hook of both projects)
   tikz.py          figs/*.tex -> .pdf + .svg when changed (pre-render hook of both projects)
+  notes_xref.py    notes/.quarto/xref (Quarto internal) -> label map for {{< notes >}}
+                   (post-render hook of the notes)
 docs/              development notes for the template (brief, audit, decisions)
                    the plan and to-do list are the GitHub issues (by milestone), not a file
 reference/         read-only reference modules (gitignored); never modify
