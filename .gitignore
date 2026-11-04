@@ -8,6 +8,10 @@ _scratch/
 # Personal settings for this computer
 _local.yml
 # Quarto and Python caches
+# (Quarto writes notes/.gitignore and sheets/.gitignore on every render; their rules are
+# already here, so they are not committed)
+/notes/.gitignore
+/sheets/.gitignore
 .quarto/
 **/*.quarto_ipynb
 .venv/
