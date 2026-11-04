@@ -99,6 +99,8 @@ Newest first. Each entry: date, decision, and any consequence for the template.
 8. **Maths engine**: author asked for pros and cons; recommendation given (MathJax), awaiting
    confirmation.
 9. **Difficulty glyph**: neutral default (stars), overridable per module (MA147/MA302: springs).
+   The template ships stars and numbers only; a module supplies its own icon as an image
+   (MA147/MA302: a spring TikZ figure in the module repo, not in the template).
 10. **Other document types**: not for now. Occasional Jupyter notebooks live in the repo;
     suggest light integration. Embedded interactive tools may come later (already parked).
 

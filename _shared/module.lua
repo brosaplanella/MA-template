@@ -27,50 +27,42 @@ local withheld = false
 
 -- Difficulty icons -----------------------------------------------------------
 
--- Spring icon: a vertical coil (a prolate cycloid) with straight leads, in a
--- 12 x 24 box. The same points are used for the PDF (TikZ) and HTML (SVG).
-local spring_points = (function()
-  local pts = { { 6, 0 } }
-  local loops, n, b, c = 3, 200, 2.4, 4.5
-  local a = (20.5 - 3.5) / (2 * math.pi * loops)
-  for i = 0, n do
-    -- start/end at t = pi/2 (mod 2 pi), where the coil crosses the centre line
-    local s = 2 * math.pi * loops * i / n
-    local t = s + math.pi / 2
-    table.insert(pts, { 6 - c * math.cos(t), 3.5 + a * s + b * (1 - math.sin(t)) })
-  end
-  table.insert(pts, { 6, 24 })
-  return pts
-end)()
-
-local function spring_latex()
-  local coords = {}
-  for _, p in ipairs(spring_points) do
-    table.insert(coords, string.format("(%.2f,%.2f)", p[1], 24 - p[2]))
-  end
-  return "\\springicon{" .. table.concat(coords) .. "}"
-end
-
-local function spring_svg()
-  local coords = {}
-  for _, p in ipairs(spring_points) do
-    table.insert(coords, string.format("%.2f,%.2f", p[1], p[2]))
-  end
-  return '<svg class="spring" viewBox="0 -0.5 12 25" aria-hidden="true">'
-    .. '<polyline points="' .. table.concat(coords, " ") .. '"/></svg>'
-end
-
--- Each style: one icon in LaTeX and HTML, and the separator between icons
+-- Built-in style: one icon in LaTeX and HTML, and the separator between icons
 local icon_styles = {
   stars = {
     latex = function() return "\\difficultystar" end, latex_sep = "",
     html = function() return '<span class="star" aria-hidden="true">★</span>' end,
   },
-  springs = {
-    latex = spring_latex, latex_sep = "\\,",
-    html = spring_svg,
-  },
 }
+
+-- A module's own icon: difficulty-icon is a path (relative to the repository
+-- root, without extension) to an image with a .pdf (for PDF) and an .svg (for
+-- HTML), for example a TikZ figure sheets/figs/spring.tex built by
+-- scripts/tikz.py. The SVG is inlined, so it also works in self-contained HTML.
+local function read_file(path)
+  local f = io.open(path, "rb")
+  if not f then return nil end
+  local content = f:read("a")
+  f:close()
+  return content
+end
+
+local function image_style(name)
+  local base = pandoc.path.join({ quarto.utils.resolve_path(".."), name })
+  if quarto.doc.is_format("latex") then
+    local pdf = base .. ".pdf"
+    if not read_file(pdf) then return nil end
+    local path = pdf:gsub("\\", "/")
+    return { latex = function() return "\\difficultyimage{" .. path .. "}" end,
+             latex_sep = "\\," }
+  end
+  local svg = read_file(base .. ".svg")
+  if not svg then return nil end
+  svg = svg:gsub("^.-<svg", "<svg", 1)   -- drop the XML declaration and comments
+  return { html = function()
+    return '<span class="difficulty-image" aria-hidden="true">' .. svg .. "</span>"
+  end }
+end
 
 local difficulty_names = { "easy", "medium", "hard" }
 
@@ -95,10 +87,11 @@ local function difficulty_icons(span)
     return pandoc.RawInline("html", '<span class="difficulty difficulty-number" title="'
       .. label .. '">(' .. n .. ")</span>")
   end
-  local style = icon_styles[style_name]
+  local style = icon_styles[style_name] or image_style(style_name)
   if not style then
-    quarto.log.warning("Unknown difficulty-icon '" .. style_name
-      .. "' (use stars, springs or numbers); using stars")
+    quarto.log.warning("difficulty-icon '" .. style_name .. "': use stars, numbers, "
+      .. "or the path of an image with .pdf and .svg versions (no extension, "
+      .. "relative to the repository root); using stars")
     style = icon_styles.stars
   end
   if quarto.doc.is_format("latex") then

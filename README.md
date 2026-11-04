@@ -118,7 +118,7 @@ Sheet features (see the examples):
 
 | You write | You get |
 |---|---|
-| `## Question 1: Title [2]{.difficulty}` | difficulty icons (stars by default; `difficulty-icon` in `_module.yml`) |
+| `## Question 1: Title [2]{.difficulty}` | difficulty icons (stars by default; numbers or your own image via `difficulty-icon` in `_module.yml`) |
 | `## Question 1 [8]{.marks}` and `... [2]{.marks}` | marks, right-aligned; a warning if the parts do not add up |
 | `[note]{.marking}` or `::: {.marking}` | notes for markers (staff build only) |
 | `::: {.infobox}` | a framed box |

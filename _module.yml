@@ -12,7 +12,9 @@ module:
   title: "Example Module"
   term: "Term 1, 2026/27"
 
-# Icon for [1]{.difficulty} etc. in problem sheets: stars, springs or numbers
+# Icon for [1]{.difficulty} etc. in problem sheets: stars, numbers, or your own image:
+# its path without extension, relative to this folder, with .pdf and .svg versions
+# (e.g. a TikZ figure sheets/figs/spring.tex gives difficulty-icon: sheets/figs/spring)
 difficulty-icon: stars
 
 problem-sheets:
