@@ -2,7 +2,7 @@
 name = "module-template"
 version = "0.1.0"
 description = "Build scripts for a Quarto module (notes, problem sheets, assignments)"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "pyyaml>=6",
 ]
