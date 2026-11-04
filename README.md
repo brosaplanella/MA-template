@@ -13,9 +13,12 @@ live in the same repository but never reach students by accident.
 |---|---|---|
 | [Quarto](https://quarto.org/docs/get-started/) | builds everything | installer from the website |
 | A TeX distribution | PDF output | `quarto install tinytex`, or TeX Live / MiKTeX |
-| [uv](https://docs.astral.sh/uv/) | runs the build scripts (Python) | see the uv website |
+| [uv](https://docs.astral.sh/uv/) | Python: build scripts, code cells, figure helpers | see the uv website |
 
-Then, once, in the repository folder: `uv sync`.
+Then, once, in the repository folder: `uv sync`. This installs everything the build and the
+code cells need (numpy, matplotlib, Jupyter, ...) into a project environment (`.venv/`).
+On macOS/Linux, TikZ figures also need Ghostscript (`brew install ghostscript`, or your
+package manager); TeX Live on Windows includes it.
 
 Everything works on Windows, macOS and Linux.
 
@@ -43,6 +46,7 @@ From the repository folder:
 ```
 uv run scripts/build.py          # student build: notes + sheets, then the upload folder
 uv run scripts/build.py staff    # staff build: everything, every file marked -STAFF
+uv run scripts/build.py --refresh  # also re-run all code in the notes (see "Code and figures")
 ```
 
 | Folder | Contents | Upload? |
@@ -55,11 +59,12 @@ While writing, preview one document with live reload:
 
 ```
 cd sheets
-quarto preview problem-sheets/problem-sheet-1/problem-sheet-1.qmd
-quarto preview assignments/assignment-1/assignment-1-solutions.qmd --profile staff
+uv run quarto preview problem-sheets/problem-sheet-1/problem-sheet-1.qmd
+uv run quarto preview assignments/assignment-1/assignment-1-solutions.qmd --profile staff
 ```
 
-Unreleased solutions show only a placeholder unless you add `--profile staff`.
+Unreleased solutions show only a placeholder unless you add `--profile staff`. Keep the
+`uv run` in front of `quarto` so code cells use the project's Python.
 
 ### Uploading to Moodle
 
@@ -118,6 +123,31 @@ Sheet features (see the examples):
 | `[note]{.marking}` or `::: {.marking}` | notes for markers (staff build only) |
 | `::: {.infobox}` | a framed box |
 | `{{< sheet deadline >}}` | a setting from `_module.yml` for this sheet |
+
+### Code and figures
+
+**Python figures.** Code cells (```` ```{python} ````) run in the project environment. Shared
+helpers are in `src/moduletools/` and can be imported from any chapter or sheet:
+
+```python
+from moduletools import apply_style, colours, set_zero_axes
+apply_style()                                   # module-wide figure style
+ax.plot(x, y, color=colours["purple"])          # palette colours
+```
+
+In the notes, code results are stored in `notes/_freeze/` (committed), and a chapter runs
+again only when it changes. If you change `src/moduletools`, rebuild with `--refresh`.
+
+**TikZ figures.** Put a standalone LaTeX file in a `figs/` folder (see
+`sheets/problem-sheets/problem-sheet-1/figs/unit-circle.tex`). Before every render it is
+compiled to `.pdf` and `.svg`. Include it **without an extension**, and the PDF output uses
+the `.pdf` while the HTML uses the `.svg`:
+
+```markdown
+![Caption.](figs/unit-circle){#fig-unit-circle width=40% fig-alt="Description."}
+```
+
+Figures can use the palette colours after `\input{palette.tex}`.
 
 ### Colours
 

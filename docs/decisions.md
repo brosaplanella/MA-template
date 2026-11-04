@@ -3,6 +3,23 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-04: Python
+
+- All Python dependencies (build scripts, Jupyter for code cells, numpy, matplotlib, qrcode) are
+  regular dependencies in `pyproject.toml`: one `uv sync` sets up everything. Chapter 3 of the
+  placeholder notes (code, QR codes) is now rendered.
+- Notes use `freeze: auto`; `notes/_freeze/` is committed. `build.py --refresh` clears it.
+  Sheets are not frozen (they are small).
+- Figure helpers are a package, `src/moduletools`, installed editable by uv (replaces the
+  `sys.path` hack). Generic parts of MA147's `utils.py` only (`apply_style`, `set_zero_axes`),
+  plus palette access; the dynamics helpers stay with MA147/MA302. Figures use a Palatino-like
+  serif with Computer Modern maths, to match the PDF. Brand colour cycle is opt-in
+  (`apply_style(brand_cycle=True)`) because most brand colours are light.
+- TikZ: `figs/*.tex` anywhere in notes/ or sheets/, built to .pdf + .svg by `scripts/tikz.py`
+  (pre-render hook, only when changed, reproducible output; committed). Images are written
+  without extension and `default-image-extension` picks .pdf (PDF) or .svg (HTML), replacing
+  MA147's duplicated `content-visible` blocks.
+
 ## 2026-11-04: palette
 
 - Brand colours in `_shared/palette.yml` (purple, lavender, coral, blue, green, yellow, black),

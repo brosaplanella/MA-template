@@ -4,7 +4,9 @@
 project:
   type: book
   output-dir: ../_build/student/notes
-  pre-render: ../scripts/palette.py   # colours from _shared/palette.yml
+  pre-render:
+    - ../scripts/palette.py   # colours from _shared/palette.yml
+    - ../scripts/tikz.py      # figs/*.tex -> .pdf and .svg
 
 book:
   title: "MA000 Example Module"   # keep in step with module.code/title in _module.yml
@@ -16,9 +18,14 @@ book:
     - index.qmd
     - chapter1.qmd
     - chapter2.qmd
-    # chapter3.qmd runs Python code (numpy, matplotlib, qrcode); see its first section
-    # - chapter3.qmd
+    - chapter3.qmd
   downloads: [pdf]
+
+# Code cells run once and their results are stored in _freeze/ (committed); a chapter
+# runs again only when it changes. After changing src/moduletools, rebuild with
+# `uv run scripts/build.py --refresh`.
+execute:
+  freeze: auto
 
 bibliography: refs.bib
 csl: american-mathematical-society-numeric.csl
@@ -30,6 +37,7 @@ format:
   html:
     toc: true
     html-math-method: mathjax
+    default-image-extension: svg   # ![](figs/name): .svg in HTML, .pdf in PDF
     theme:
       light: [flatly, ../_shared/generated/theme-light.scss]
       dark: [darkly, ../_shared/generated/theme-dark.scss]
@@ -39,6 +47,7 @@ format:
     papersize: a4
     toc: true
     toc-depth: 2
+    default-image-extension: pdf
     pdf-engine: pdflatex   # needed for fontfamily (Domitian, a Palatino-like font)
     fontfamily: domitian
     colorlinks: true

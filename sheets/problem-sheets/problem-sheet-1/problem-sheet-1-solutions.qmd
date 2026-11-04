@@ -26,3 +26,24 @@ $$
 \frac{1 - \cos x}{x^2} = \frac{\frac{x^2}{2} + O(x^4)}{x^2} = \frac{1}{2} + O(x^2) \to \frac{1}{2}
 \quad \text{as } x \to 0.
 $$
+
+@fig-limit shows the quotient approaching $\frac{1}{2}$.
+
+```{python}
+#| echo: false
+#| label: fig-limit
+#| fig-cap: 'The quotient $(1 - \cos x)/x^2$ near $x = 0$.'
+#| fig-alt: "A curve that rises to a maximum of one half at x equals zero, symmetric about the vertical axis."
+import matplotlib.pyplot as plt
+import numpy as np
+from moduletools import apply_style, colours, set_zero_axes
+
+apply_style()
+x = np.linspace(-4, 4, 400)
+x = x[x != 0]
+fig, ax = plt.subplots(figsize=(5, 3))
+ax.plot(x, (1 - np.cos(x)) / x**2, color=colours["purple"])
+ax.hlines(0.5, 0.5, 4, color=colours["coral"], linestyle="--", linewidth=1.2)
+set_zero_axes(ax, xlabel="$x$")
+plt.show()
+```
