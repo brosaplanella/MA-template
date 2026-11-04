@@ -1,0 +1,50 @@
+# Lecture notes (a Quarto book). Build from the repository root with
+#   uv run scripts/build.py
+# or, inside this folder, `quarto render` / `quarto preview`.
+project:
+  type: book
+  output-dir: ../_build/student/notes
+
+book:
+  title: "MA000 Example Module"   # keep in step with module.code/title in _module.yml
+  subtitle: "Lecture notes"
+  author: "Module lecturer"
+  date: today
+  date-format: "D MMMM YYYY"
+  chapters:
+    - index.qmd
+    - chapter1.qmd
+    - chapter2.qmd
+    # chapter3.qmd runs Python code (numpy, matplotlib, qrcode); see its first section
+    # - chapter3.qmd
+  downloads: [pdf]
+
+bibliography: refs.bib
+csl: american-mathematical-society-numeric.csl
+
+filters:
+  - ../_shared/module.lua
+
+format:
+  html:
+    toc: true
+    html-math-method: mathjax
+    theme:
+      light: [flatly, ../_shared/theme-light.scss]
+      dark: [darkly, ../_shared/theme-dark.scss]
+    css: ../_shared/style.css
+  pdf:
+    documentclass: scrbook
+    papersize: a4
+    toc: true
+    toc-depth: 2
+    pdf-engine: pdflatex   # needed for fontfamily (Domitian, a Palatino-like font)
+    fontfamily: domitian
+    colorlinks: true
+    linkcolor: accent
+    toccolor: accent
+    urlcolor: accent
+    citecolor: accent
+    include-in-header:
+      - ../_shared/preamble.tex
+      - ../_shared/preamble-notes.tex

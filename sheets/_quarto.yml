@@ -1,0 +1,51 @@
+# Problem sheets and assignments. Build from the repository root with
+#   uv run scripts/build.py           (student build)
+#   uv run scripts/build.py staff     (staff build: everything, marked -STAFF)
+# or, inside this folder, `quarto render` (student) / `quarto render --profile staff`.
+#
+# Layout: <kind>/<id>/<id>.qmd (questions) and <kind>/<id>/<id>-solutions.qmd,
+# where <kind> is problem-sheets or assignments. Settings per sheet (deadlines,
+# release flags) are in ../_module.yml under the same <kind> and <id>.
+project:
+  type: default
+  output-dir: ../_build/student/sheets
+  render:
+    - "problem-sheets/*/*.qmd"
+    - "assignments/*/*.qmd"
+
+# Plain `quarto render` / `quarto preview` is the student build. Unreleased
+# solutions are withheld; preview them with `--profile staff`.
+profile:
+  default: student
+
+filters:
+  - ../_shared/module.lua
+shortcodes:
+  - ../_shared/sheet.lua
+
+format:
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 11pt
+    geometry:
+      - margin=25mm
+    pdf-engine: pdflatex   # needed for fontfamily (Domitian, a Palatino-like font)
+    fontfamily: domitian
+    colorlinks: true
+    linkcolor: accent
+    urlcolor: accent
+    template-partials:
+      - ../_shared/partials/before-body.tex
+    include-in-header:
+      - ../_shared/preamble.tex
+      - ../_shared/preamble-sheet.tex
+  html:
+    embed-resources: true   # one self-contained .html file per sheet (easy to upload to Moodle)
+    html-math-method: mathjax
+    theme:
+      light: [flatly, ../_shared/theme-light.scss]
+      dark: [darkly, ../_shared/theme-dark.scss]
+    css: ../_shared/style.css
+    toc: false
+    format-links: false     # no "PDF" link: each file is uploaded on its own

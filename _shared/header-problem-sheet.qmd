@@ -1,0 +1,5 @@
+::: {.infobox}
+These problem sheets are not for credit. Work through the questions in your own time, and use the solutions to check your understanding after attempting the questions.
+
+**Difficulty:** [1]{.difficulty} easy, [2]{.difficulty} medium, [3]{.difficulty} hard.
+:::

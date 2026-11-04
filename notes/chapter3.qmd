@@ -1,0 +1,109 @@
+# Advanced topics {#sec-adv}
+
+In this final chapter, we will cover the use of code blocks and embedding video in the notes. This chapter is not rendered on a first download, as it requires Python to be installed, and also Quarto needs to know about it. The Python packages used below are `numpy`, `matplotlib` and `qrcode`; it's likely that if you use Python regularly for Maths, only the last of these will need installing. You will find further information about how to configure Quarto correctly to work with Python in the [Quarto docs](https://quarto.org/docs/computations/python.html). Note that integration with R, Julia and JavaScript are also all possible.
+
+## Code blocks {#sec-adv-code-blocks}
+
+Code blocks are included using triple backticks, and can be used to include code in various programming languages. The first line of the triple backtick block should state the language, e.g. ` ```python `, which ensures that the code is highlighted and styled appropriately for the language. If the name of the language is enclosed in curly braces, Quarto will try to execute it when rendering, so ` ```{python} ` starts an executable Python block.
+
+The following executable code block defines a simple Python function, and then runs it. You should see the output of the function in the rendered notes.
+
+```{python}
+def hello_world():
+    print("Hello, world!")
+
+hello_world()
+```
+
+If desired, code blocks can be labelled and referenced in the same way as equations, figures, and sections. See below for an example, which should hopefully now be fairly self-explanatory. Note the `lst-cap` attribute, which provides a caption for the code block.
+
+::: {#lst-my-first-function lst-cap="Computing the mean of the numbers 1 to 10 in Python."}
+```{python}
+x = 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10
+print("The arithmetic mean of the numbers 1 to 10 is", x / 10)
+```
+:::
+
+Code blocks can be used to *produce* figures, as well as to provide code snippets, which is a really nice feature of Quarto. When using them for figures, it can be useful to hide the code block, but you don't need to do this if you want students to have access to the code. In fact, code-folding options exist for this purpose to keep the document looking clean. An example of a code-generated figure is provided below. In the markdown, you should be able to see the following opening lines:
+```
+#| label: fig-energyplot
+#| echo: false
+#| fig-cap: "The variation of the Neo-Hookean energy density as a function of various forms of stretch. Here, the parameter values are a=0.6MPa and c=0.6MPa, which are values representative of rubber."
+#| fig-alt: "A plot of the Neo-Hookean energy density as a function of stretch for uniaxial, biaxial, and triaxial deformations. The energy density increases with both stretching and compression. Close to the identity, the stored energy is highest for triaxial deformation, then biaxial, followed by uniaxial deformation."
+```
+Note these lines begin with `#|`, and set various Quarto attributes for the block. In this case, in order, they set the label for the figure, hide the code block, set the caption and define the alt-text for the figure. The code which follows these lines produces the image for the figure, which will appear rendered in the notes (both HTML and PDF versions). 
+
+```{python}
+#| label: fig-energyplot
+#| echo: false
+#| fig-cap: "The variation of the Neo-Hookean energy density as a function of various forms of stretch. Here, a=0.6MPa and c=0.6MPa, which are values representative of rubber."
+#| fig-alt: "A plot of the Neo-Hookean energy density as a function of stretch for uniaxial, biaxial, and triaxial deformations. The energy density increases with both stretching compression. Close to the identity, the stored energy is highest for triaxial deformation, then biaxial, followed by uniaxial deformation."
+
+import matplotlib.pyplot as plt
+import numpy as np
+import numpy.linalg as la
+a = 0.6 ## MPa
+kappa = 0.6 ## MPa
+c = kappa/9 - 4*a/9
+ls = np.arange(0.00001,4.001,0.01)
+F1 = lambda l : np.array([[l, 0.0, 0.0], [0., 1., 0.], [0., 0., 1.]])
+F2 = lambda l : np.array([[l, 0.0, 0.0], [0., l, 0.], [0., 0., 1.]])
+F3 = lambda l : np.array([[l, 0.0, 0.0], [0., l, 0.], [0., 0., l]])
+cofF = lambda F : la.det(F)*(la.inv(F).T)
+W = lambda F : a*la.norm(F,ord='fro')**2+c*la.det(F)-(2*a+c)*np.log(la.det(F)) - 3*a - c
+plt.plot(ls,[W(F1(l)) for l in ls],label="Uniaxial")
+plt.plot(ls,[W(F2(l)) for l in ls],label="Biaxial")
+plt.plot(ls,[W(F3(l)) for l in ls],label="Triaxial")
+plt.xlabel(r'$\lambda$')
+plt.ylabel(r'Strain energy density, $W(F_\lambda)$ in MPa')
+plt.ylim((0.0,15.0))
+plt.xlim((0.0,4.0))
+plt.legend()
+plt.show()
+```
+
+There are many more options for code blocks, and many can be set globally in your notes. For further information, see the [Quarto documentation](https://quarto.org/docs/output-formats/html-code.html).
+
+**Exercise:** Adapt the code above to produce a plot of the quadratic $y = x^2+x$ as a figure, adding an appropriate caption and alt-text.
+
+## Videos {#sec-adv-videos}
+
+A further nice feature of Quarto is that you can embed videos in the HTML notes. For example, the following video is embedded in the HTML output from YouTube. Note that for the HTML, it is good practice is to embed video from a third-party website rather than include your own as a raw video file. The reason for this is that third-party hosting sites often provide subtitles for accessibility. To embed a video, simply use the syntax `{{< video url.com/video >}}`, where `url.com/video` is the link to the appropriate video.
+
+If you are viewing the PDF version of the notes, you will find that the embdedded video has been replaced by a QR code which can be scanned to access the video. The reason for this is that if you are rendering in both HTML and PDF formats, you need to handle the video appropriately: the default approach is not very clean (try this for yourself and see!). In the markdown below, you'll see that the QR code is automatically generated using the Python `qrcode` package. If you copy the code below, make sure to change the video addresses each time it appears, note there are 3 places to do this! Notice that there are two blocks, which show conditionally depending on the render method.
+
+::: {.content-visible when-format="html"}
+{{< video https://youtu.be/YCXmUi56rao?si=iRoJvmnyTZDHu1y2 >}}
+:::
+
+::: {.content-visible when-format="pdf"}
+```{python}
+#| echo: false
+#| fig-cap: "Scan to watch the video on Bayes rule, or visit directly via the link: https://youtu.be/YCXmUi56rao?si=iRoJvmnyTZDHu1y2"
+#| out-width: "20%"
+#| fig-align: "center"
+
+import qrcode
+import matplotlib.pyplot as plt
+
+url = "https://youtu.be/YCXmUi56rao?si=iRoJvmnyTZDHu1y2"
+qr = qrcode.make(url)
+
+fig, ax = plt.subplots()
+ax.imshow(qr, cmap="gray")
+ax.axis("off")
+plt.tight_layout()
+plt.show()
+```
+:::
+
+**Exercise:** Embed a YouTube video of your choice in these notes, and adapt the code above to show a QR code linking to the video in the PDF notes.
+
+## Final remarks {#sec-adv-final}
+
+Thanks for making it this far! I hope you give Quarto a go. I'm very happy to offer help and advice if you do decide to do so. In addition, Ferran Brosa Planella is also actively using Quarto for notes, so he has said you can ask him for advice too, and please spread the word! 
+
+Some additional things that I didn't have time to talk about include:
+
+- For some of my notes, I have set up some automated scripting to render standalone tikz diagrams to both SVG and PDF format for embedding respectively into HTML and PDF notes. If this is something that interests you, I can share my workflow.
+- Quarto doesn't just produce books, you can also use it to produce presentations and websites. These are all explained in the documentation!

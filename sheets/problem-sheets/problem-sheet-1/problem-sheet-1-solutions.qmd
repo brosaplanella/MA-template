@@ -1,0 +1,28 @@
+---
+title: "Problem Sheet 1 -- Solutions"
+---
+
+## Question 1
+
+(a) $f'(x) = 3x^2 - 2$.
+
+(b) By the chain rule, $g'(x) = 2x \cos(x^2)$.
+
+(c) By the product rule, $h'(x) = \mathrm{e}^{-x} - x \, \mathrm{e}^{-x} = (1 - x) \, \mathrm{e}^{-x}$.
+
+## Question 2
+
+(a) $\displaystyle \int_0^1 (3x^2 + 1) \, \mathrm{d}x = \Big[ x^3 + x \Big]_0^1 = 2$.
+
+(b) With $u = x$ and $\mathrm{d}v = \cos x \, \mathrm{d}x$, so that $\mathrm{d}u = \mathrm{d}x$ and $v = \sin x$,
+    $$
+    \int x \cos x \, \mathrm{d}x = x \sin x - \int \sin x \, \mathrm{d}x = x \sin x + \cos x + C.
+    $$
+
+## Question 3
+
+Using the Taylor series $\cos x = 1 - \frac{x^2}{2} + O(x^4)$,
+$$
+\frac{1 - \cos x}{x^2} = \frac{\frac{x^2}{2} + O(x^4)}{x^2} = \frac{1}{2} + O(x^2) \to \frac{1}{2}
+\quad \text{as } x \to 0.
+$$

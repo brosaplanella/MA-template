@@ -1,0 +1,89 @@
+/* HTML styling shared by the notes and the sheets. Colours come from the
+   --accent variables set in theme-light.scss / theme-dark.scss. */
+.center {
+  text-align: center;
+}
+
+.infobox {
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0 1.5rem;
+}
+
+.infobox > :last-child {
+  margin-bottom: 0;
+}
+
+/* Keep aspect ratio of images in figure layouts: Quarto sets max-width: 100%
+   on them but the fixed height attribute would otherwise squash them */
+.quarto-layout-cell img {
+  height: auto;
+}
+
+/* [2]{.marks}: right-aligned marks */
+.marks {
+  float: right;
+  margin-left: 1em;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Keep floated marks inside their paragraph (e.g. after a displayed equation) */
+p:has(> .marks)::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+h2 .marks-total {
+  font-size: 0.8em;
+  line-height: 1.6;
+}
+
+/* [2]{.difficulty}: inline icons, sized like emoji */
+.difficulty {
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+.spring {
+  height: 1em;
+  width: 0.48em;
+  margin: 0 0.04em;
+  vertical-align: -0.12em;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* [text]{.marking} and ::: {.marking}: notes for markers (staff builds only) */
+.marking {
+  font-size: 0.9em;
+  font-style: italic;
+  color: var(--accent);
+}
+
+div.marking {
+  border-left: 3px solid var(--accent-border);
+  background: var(--accent-soft);
+  padding: 0.25rem 0.75rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+div.marking > :last-child {
+  margin-bottom: 0;
+}
+
+/* Banner at the top of a sheet: staff copy (alert) or released solutions */
+.doc-banner {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.doc-banner-alert {
+  color: var(--alert);
+}
