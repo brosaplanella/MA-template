@@ -23,7 +23,7 @@ colours:
   yellow:
     hex: null
   black:
-    hex: "#0C0C0C"    # brand black (pure black is #000000)
+    hex: "#0C0C0C"    # brand black; body text keeps the default black (decided 2026-11-04)
 
 # What the template uses each colour for (names from the list above)
 roles:
