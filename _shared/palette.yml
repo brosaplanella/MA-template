@@ -1,0 +1,30 @@
+# Module colour palette: the one place where colours are defined.
+#
+# Give each colour at 100%. Tints (80, 60, 40, 20%) are made by mixing with white,
+# which matches the Warwick brand guide to within rounding. They are available as
+# e.g. aubergine-60 (LaTeX: \color{aubergine-60}; CSS: var(--aubergine-60)).
+#
+# Contrast on white (WCAG asks for at least 4.5 for text): colours below that are for
+# fills, boxes and highlights only, not text. Fill in `hex` for the placeholders (null).
+
+colours:
+  aubergine:
+    hex: "#440379"    # contrast on white 13.7: fine for text
+  lavender:
+    hex: null
+  purple:
+    hex: null
+  coral:
+    hex: "#F1977F"    # contrast on white 2.2: fills only, not text
+  blue:
+    hex: null
+  green:
+    hex: null
+  yellow:
+    hex: null
+  black:
+    hex: "#0C0C0C"    # brand black (pure black is #000000)
+
+# What the template uses each colour for (names from the list above)
+roles:
+  accent: aubergine   # headings, titles, marks, box frames, links
