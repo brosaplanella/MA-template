@@ -7,6 +7,8 @@ project:
   pre-render:
     - ../scripts/palette.py   # colours from _shared/palette.yml
     - ../scripts/tikz.py      # figs/*.tex -> .pdf and .svg
+  post-render:
+    - ../scripts/notes_xref.py  # labels and numbers for {{< notes label >}} in the sheets
 
 book:
   title: "MA000 Example Module"   # keep in step with module.code/title in _module.yml
