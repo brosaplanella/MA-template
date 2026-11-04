@@ -1,0 +1,115 @@
+# Introduction to Quarto {#sec-intro}
+
+## What is Quarto?
+
+Quarto is a clever multi-output document rendering tool. From a single set of markdown source files, it allows the generation of a wide variety of output formats; examples include `.docx`, `.ppt`, `.html`, `.pdf` and `.epub` files.
+
+For those already familiar with LaTeX, the key benefit of Quarto I'll be laying out is that it allows you to generate HTML-rendered notes alongside the PDF notes you are familiar with, which allows notes to be much more accessible, as I'll explain below.
+
+Overall, there are fairly low (but not zero!) overheads for converting to using Quarto from an existing LaTeX-based workflow, which is why I first started using it. As a side benefit, Quarto allows you to do various nice things that LaTeX won't, which I'll also show off.
+
+So why move away from PDF notes? From an accessibility point of view, there are several major issues with PDFs:
+
+- PDF files lack the underlying tags which allow screenreaders to parse them correctly, and sometimes order material incorrectly to how it appears visually;
+- PDF colour schemes can't be adjusted easily to help those who benefit from alternative colours or high contrast; and
+- PDFs are difficult to resize because the arrangement of content is static, so don't always adapt well to phones and tablets.
+
+All of these downsides of PDFs are resolved by providing HTML output. HTML is designed to handle documents that may be showing on a wide variety of screen sizes. Formatting can be customised through a browser, and screen readers can parse the underlying tags correctly. Simple browser extensions can manually change colours and formatting for people, making your notes adaptable to the user. Beyond these advantages for accessibility, HMTL allows the embedding of dynamic content which makes lecture notes more engaging, as I'll show you. 
+
+Finally, if you need more persuasion, here's a quote from some of my lecture feedback last year:
+
+> *A special mention also goes to the online notes Hudson has provided for this module, which resize themselves sensibly to any screen size and are also contain a useful search bar that shows you context of where words appear. These are very cleanly presented, organised, fast, and overall excellently made. This is probably the first time I've not felt friction in using digital lecture notes over printed ones.*
+
+If you are already familiar with rendering PDFs from LaTeX code, you will likely find that Quarto is relatively easy to adapt to. Just like LaTeX, we need to install a renderer, and much of the syntax and approach is very similar to the way LaTeX works, but there are some key tweaks to be made which I'll highlight.
+
+## Aims {#sec-intro-aims}
+
+By the end of this section you should:
+
+- understand what Quarto is and have access to it;
+- have rendered this template to produce a PDF and HTML version of the notes;
+- know how to upload and display the rendered HTML and PDF notes on a Moodle page; and
+- understand what options are available for converting existing notes to this format.
+
+## Getting Started {#sec-intro-getting-started}
+
+To get started with Quarto for your own use, you need the following ingredients:
+
+1. You need Quarto to be installed on your machine and
+2. You need a text editor or Integrated Development Environment (IDE) to edit the source files.
+
+To circumvent issues with installing, for the workshop itself I've set up a workspace on [Posit Cloud](https://posit.cloud/) that will allow you to see how things work and render pages. I will share a link to this space during the workshop. For before or after the workshop, see some advice below on fulfilling the requirements above.
+
+### Installing
+
+If you have admin rights on your own machine, you can find full installation instructions on the [Quarto website](https://quarto.org/docs/get-started/), so it's a case of simply following these. If you are on a managed machine, you may need to open an IT Services ticket to get Quarto installed.
+
+### Text editors / IDEs
+
+The easiest way to use Quarto is probably via RStudio, the IDE used for the R language. This provides you with a clickable 'Render' button like some LaTeX editors that will simply run Quarto to produce the documents. Posit Cloud provides a web-based version of RStudio, so you can get a feel for this if you use it during the workshop. Alternatively, you can use Quarto direct from the command line, and so using this method, it's compatible with many IDEs or just a plain text editor. I use VSCode to edit Quarto myself, which I find works very well.
+
+### Rendering these notes
+
+Once Quarto is installed successfully, you can test your install with these notes. Download the template repo used for these notes. To do this:
+
+1. Go to the github repo for these notes, [github.com/thudso/QuartoLectureNotesTemplate](https://github.com/thudso/QuartoLectureNotesTemplate).
+2. Click "Code" and then "Download ZIP" (if you are already a git user and know how, you could also just clone the repo).
+3. Unzip the files into an appropriate directory and open the folder in your IDE of choice.
+4. Using the terminal, navigate to the unzipped directory and run `quarto render` in the terminal to build the notes.
+5. After some messages in the terminal, you should now see that a `docs` folder has appeared in the main directory, which contains the rendered notes in both PDF and HTML format.
+
+If you look inside `docs`, you will see a single PDF file alongside individual HTML pages for each chapter. `index.html` is the main page, and you can navigate to the other pages using the menu on the left-hand side of the page. If you open `index.html` in a browser, you should see that the notes are fully rendered. The rendering is dynamic, so exactly what you see will depend on the device you are using and the window width; try resizing the window.
+
+If you are using a full-width screen, you should see chapters listed on the left, and the content of the chapter on the right. The left sidebar also includes a dynamic search box, a PDF download button, and switch to change from light to dark mode. If you are using a smaller screen, the left sidebar will be hidden, but you can still access it by clicking the menu button in the top left corner of the page.
+
+## Editing the notes {#sec-intro-editing}
+
+To update notes, you can edit the `.qmd` files in the main folder using a text editor or your preferred IDE. Notice that each `.qmd` file corresponds to a `.html` file in the rendered notes. The `_quarto.yml` file is the header which sets the overall configuration for the notes. Inspecting this, you can edit this to change the title of the notes, the author, and various other settings. In this project, I have add some explanatory comments. If you add new chapters, you will need to add them to the `_quarto.yml` file in the `chapters` section.
+
+After making edits, you can then re-render the notes using `quarto render` in the terminal, and the updated notes will be available in the `docs` folder. More details about Quarto syntax follow in @sec-ex.
+
+One nice feature of Quarto is the ability to use a dynamic preview of the HTML notes as you edit them. To activate this, run `quarto preview` in the terminal, and a new browser window will open with the notes. As you edit and save changes to the `.qmd` files, the browser pge will automatically update to show your changes. This is a very useful feature for checking that your edits are correct before rendering the final version of the notes. Note that the `preview` command will not render a PDF, which is slower. This means you should always run `quarto render` to check the PDF version of the notes before uploading them to Moodle.
+
+## Uploading to Moodle {#sec-intro-moodle}
+
+To make the notes available on Moodle, follow the following steps:
+
+1. Render the notes using `quarto render` in the terminal, running in the folder containing `_quarto.yml`.
+2. Zip the `docs` folder.
+3. On your Moodle page, click "Add an activity or resource" and select "File".
+4. Give the file a name (e.g., "Lecture Notes"), and upload the zipped `docs` folder by dragging and dropping it into the file upload box.
+5. Once the zip file is uploaded, click on it in the box, then click the `unzip` button on the dialogue that appears to extract the contents of the zip file. 
+6. You should now see a folder called `docs` in your Moodle course: click on it. It will open, and click again on `index.html`. In the dialogue that appears, click `Set main file`. This will ensure that when students click on the link to the notes, they will be taken to the main page of the notes.
+7. Now click "Save and return to course" at the bottom of the page.
+
+After returning to the main Moodle page, you should now find that the link to the notes is available, and clicking on it will open the HTML notes in a new tab in the browser. You will probably also want to provide a PDF version of the notes for students to download. To add a direct link to the PDF version of the notes for students to download, follow the following steps:
+
+1. On your Moodle page, click "Add an activity or resource" and select "File".
+2. Give the file a name (e.g. "PDF Lecture Notes").
+3. Click on "Plus" button just above the "Select files" section, and then navigate to the `docs` folder you just uploaded, then to the `QuartoLectureNotesTemplate.pdf` file.
+4. Next, change the radio buttons at the top from `Make a copy of the file` to `Link to the file`. This will ensure that when you update the notes, the PDF link will always point to the latest version of the notes, and you only need to update the notes in one place.
+5. Finally, click `Select this file` to add the PDF link to your Moodle page.
+
+After these initial steps, if you re-render the notes and want to update the version on Moodle, you now simply zip and upload the `docs` folder again, and the PDF link will automatically point to the latest version of the notes, as long as you did not do anything to change the name of `index.html` or the overall project.
+
+## Great, but what if I have existing notes?
+
+Quarto is great if you are writing a fresh set of notes, as you can learn as you go. But what if you have existing notes for your module? The good news is that there are tools both old and new that will help you to make the conversion:
+
+### Option 1: Use AI to convert
+
+Ferran and I have tested using AI to convert `.tex` files to `.qmd`. I tried prompting OpenAI's Sol 5.6 (available via NebulaONE), and it did an excellent job of converting a tex file and letting me know what it did. Ferran has used the Copilot agent in the past, and found it also did a good job of the conversion. This probably means that AI should be your first choice to convert existing, but other options follow below in case you are not keen on using AI agents.
+
+### Option 2: Use pandoc to convert
+
+Pandoc is the format-to-format document conversion tool that is beneath a lot of what Quarto does, so installing pandoc and using it on the command line may get you some way. The following command:
+
+```bash
+pandoc old_notes.tex -s -o new_notes.md
+```
+
+will take `old_notes.tex` and output a markdown version `new_notes.md`. To try rendering in Quarto, simply change the extension from `.md` to `.qmd` and then render using `quarto render new_notes.md`. To make this a full project, you will need to add a `_quarto.yml` header file (or modify the existing header at the top of the file). Unfortunately, you will likely find that there is quite a lot of cleaning up of the underlying file to do after this, particular with a long, complex set of notes. I originally used this route to convert my existing MA4J1 Continuum Mechanics notes from LaTeX to Quarto Markdown in 2023, and it took me about a week to iron out all the issues, so there will definitely be work to be done!
+
+### Option 3: Manually convert
+
+Given that even automatic conversion using pandoc is going to be fairly labour intensive, it may be simplest to manually convert your notes section by section, adapting the equation blocks to markdown syntax, changing section headings and figures, etc. Some clever use of find-and-replace with regular expressions can help to speed this up (again, an AI prompt to help design the regexes may help you to accelerate this process!).

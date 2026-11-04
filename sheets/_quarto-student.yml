@@ -1,0 +1,4 @@
+# Student build (the default). After rendering, delete the placeholders of
+# unreleased solutions and check that nothing staff-only is in the output.
+project:
+  post-render: ../scripts/post_render_student.py

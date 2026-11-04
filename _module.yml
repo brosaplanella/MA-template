@@ -1,0 +1,45 @@
+# Module settings: edit this file once per year (and when releasing solutions).
+#
+# Used by the sheets (problem sheets and assignments) for their headers, and by the
+# build scripts to decide which solutions students may see. Personal settings for
+# your own computer go in _local.yml (not committed; anything there overrides this
+# file). Do not put release flags in _local.yml: the committed file is the record.
+#
+# Dates are YYYY-MM-DD, with an optional time (YYYY-MM-DD HH:MM).
+
+module:
+  code: "MA000"
+  title: "Example Module"
+  term: "Term 1, 2026/27"
+
+# Icon for [1]{.difficulty} etc. in problem sheets: stars, numbers, or your own image:
+# its path without extension, relative to this folder, with .pdf and .svg versions
+# (e.g. a TikZ figure sheets/figs/spring.tex gives difficulty-icon: sheets/figs/spring)
+difficulty-icon: stars
+
+problem-sheets:
+  defaults:
+    # Lecturers who publish solutions together with the sheet can set this to
+    # true here; otherwise release each sheet's solutions below.
+    solutions-released: false
+  problem-sheet-1:
+    solutions-released: true
+    release-date: 2026-10-12
+
+assignments:
+  defaults:
+    solutions-released: false
+    submission: >-
+      upload your answers via Moodle as a single PDF file (typed, or a scan of
+      handwritten work).
+    instructions: >-
+      Attempt all questions. Only some questions will be marked for credit.
+    marker-instructions: >-
+      Mark the questions listed in the solutions. Write general feedback for the
+      whole cohort rather than individual feedback.
+  assignment-1:
+    deadline: 2026-10-15 12:00
+    deadline-label: "week 2, UK time"
+    # Set to true (and add the date) when the solutions can be shown to students.
+    solutions-released: false
+    release-date: 2026-10-22

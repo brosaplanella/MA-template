@@ -1,0 +1,5 @@
+# Staff build: all sheets and solutions, with marking notes, a "staff copy" banner
+# and a -STAFF suffix on every file. Never upload anything from _build/staff.
+project:
+  output-dir: ../_build/staff/sheets
+  post-render: ../scripts/post_render_staff.py

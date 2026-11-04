@@ -1,0 +1,22 @@
+%% Header of every PDF sheet (replaces Quarto's default \maketitle).
+%% Variables are set by module.lua from _module.yml.
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small $module$ -- $header-title$}
+\fancyhead[R]{\small $term$}
+\fancyfoot[C]{\small Page \thepage\ of \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancypagestyle{plain}{}  % same style on the first page
+
+{\raggedright
+{\color{accent}\LARGE\bfseries $title$\par}
+$if(banner)$
+\vspace{4pt}
+$if(banner-alert)$
+{\color{alert}\small\bfseries $banner$\par}
+$else$
+{\color{accent}\small\bfseries $banner$\par}
+$endif$
+$endif$
+}
+\vspace{10pt}

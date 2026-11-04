@@ -3,6 +3,29 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-04: implementation choices in v0.1-core (for review)
+
+- **Layout**: two Quarto projects, `notes/` (book) and `sheets/` (problem sheets and
+  assignments together), sharing `_shared/`. A sheet is identified by its path
+  `sheets/<kind>/<id>/<id>[-solutions].qmd`; no front-matter flags needed.
+- **Release control** is done by the filter, not by per-profile render lists: Quarto treats a
+  file excluded from `render:` as a standalone document, so rendering it by name would skip the
+  filters and write unmarked output next to the source. In a student build, unreleased solutions
+  render as a placeholder that the post-render hook deletes, so solution text never reaches
+  `_build/student/`.
+- **Setting names** are kebab-case (`solutions-released`, `release-date`) to match Quarto's own
+  options, instead of the brief's `solutions_released`.
+- **Staff build marks every file** `-STAFF` (question sheets too) with a red banner: simpler
+  rule, "nothing from `_build/staff` is ever uploaded".
+- **Student build strips marks and marker notes** from released solutions.
+- **Entry point** is `uv run scripts/build.py` (Python), with Quarto post-render hooks doing the
+  leak check, so plain `quarto render` in `sheets/` is also safe.
+- **CI** only checks that the repository is private (via the API, also weekly).
+- **Fonts**: Domitian (Palatino-like) in PDF needs pdflatex, set explicitly. HTML keeps
+  flatly/darkly fonts. Headings serif in aubergine in both notes and sheets (the MA147 sheets
+  used sans headings).
+- **Dark mode accent**: `#BB99E6` (6.7:1 on darkly's background); the aubergine is 1.2:1.
+
 ## 2026-11-04 (later): follow-up answers
 
 - **Builds are local.** CI does not need to build the documents. This replaces the brief's
@@ -48,6 +71,8 @@ Newest first. Each entry: date, decision, and any consequence for the template.
 8. **Maths engine**: author asked for pros and cons; recommendation given (MathJax), awaiting
    confirmation.
 9. **Difficulty glyph**: neutral default (stars), overridable per module (MA147/MA302: springs).
+   The template ships stars and numbers only; a module supplies its own icon as an image
+   (MA147/MA302: a spring TikZ figure in the module repo, not in the template).
 10. **Other document types**: not for now. Occasional Jupyter notebooks live in the repo;
     suggest light integration. Embedded interactive tools may come later (already parked).
 

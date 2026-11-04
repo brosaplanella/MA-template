@@ -1,0 +1,21 @@
+---
+title: "Assignment 1"
+---
+
+{{< include ../../../_shared/header-assignment.qmd >}}
+
+For all answers, state clearly any results from the module that you use.
+
+## Question 1: Separable equations
+
+Solve the initial value problem
+$$
+\frac{\mathrm{d}y}{\mathrm{d}x} = x y^2, \quad y(0) = 1,
+$$
+and state the largest interval containing $x = 0$ on which the solution exists.
+
+## Question 2: Linear equations
+
+(a) Find the general solution of $\dot{x}(t) + 2 x(t) = \mathrm{e}^{-t}$.
+
+(b) Describe the behaviour of every solution as $t \to \infty$.

@@ -1,0 +1,27 @@
+# This repository holds assignment solutions, so it must stay private. GitHub cannot
+# stop a personal repository from being made public, so this check fails loudly
+# (and emails the owner) if it ever is. It takes seconds and builds nothing:
+# documents are built locally (see README.md).
+name: Private repository guard
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"   # every Monday, in case visibility changes without a push
+
+jobs:
+  private:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if this repository is public
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          private=$(gh api "repos/${{ github.repository }}" --jq .private)
+          if [ "$private" != "true" ]; then
+            echo "::error::This repository contains solutions and must be private. Make it private in Settings > General > Danger Zone, then check what may have been exposed."
+            exit 1
+          fi
+          echo "OK, the repository is private."

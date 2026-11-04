@@ -1,0 +1,32 @@
+---
+title: "Problem Sheet 1"
+---
+
+{{< include ../../../_shared/header-problem-sheet.qmd >}}
+
+## Question 1: Differentiation [1]{.difficulty}
+
+Differentiate the following functions with respect to $x$.
+
+(a) $f(x) = x^3 - 2x + 1$.
+
+(b) $g(x) = \sin(x^2)$.
+
+(c) $h(x) = x \, \mathrm{e}^{-x}$.
+
+## Question 2: Integration [2]{.difficulty}
+
+Evaluate the following integrals.
+
+(a) $\displaystyle \int_0^1 (3x^2 + 1) \, \mathrm{d}x$.
+
+(b) $\displaystyle \int x \cos x \, \mathrm{d}x$.
+
+    _Hint: use integration by parts._
+
+## Question 3: A limit [3]{.difficulty}
+
+Show that
+$$
+\lim_{x \to 0} \frac{1 - \cos x}{x^2} = \frac{1}{2}.
+$$

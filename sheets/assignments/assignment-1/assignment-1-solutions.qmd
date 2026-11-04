@@ -1,0 +1,35 @@
+---
+title: "Assignment 1 -- Solutions"
+---
+
+{{< include ../../../_shared/header-assignment-solutions.qmd >}}
+
+::: {.marking}
+Mark both questions (10 marks in total).
+:::
+
+## Question 1 [5]{.marks}
+
+Separating variables, $y^{-2} \, \mathrm{d}y = x \, \mathrm{d}x$, so $-y^{-1} = \frac{x^2}{2} + C$. [2]{.marks}
+
+The initial condition $y(0) = 1$ gives $C = -1$, so
+$$
+y(x) = \frac{2}{2 - x^2}.
+$$ [2]{.marks}
+
+The solution blows up at $x = \pm\sqrt{2}$, so it exists on $(-\sqrt{2}, \sqrt{2})$. [1]{.marks}
+
+::: {.marking}
+Accept any equivalent form of the solution. The interval mark needs both end points.
+:::
+
+## Question 2 [5]{.marks}
+
+(a) The integrating factor is $\mathrm{e}^{2t}$, so $\frac{\mathrm{d}}{\mathrm{d}t}\left(\mathrm{e}^{2t} x\right) = \mathrm{e}^{t}$. [1]{.marks}
+
+    Integrating gives
+    $$
+    x(t) = \mathrm{e}^{-t} + C \, \mathrm{e}^{-2t}.
+    $$ [2]{.marks}
+
+(b) Both terms decay, so every solution tends to $0$ as $t \to \infty$ (like $\mathrm{e}^{-t}$). [2]{.marks}

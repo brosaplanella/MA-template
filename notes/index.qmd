@@ -1,0 +1,14 @@
+# Preface {.unnumbered}
+
+Welcome to a simple template for creating lecture notes using Quarto. This template is designed to be easy to render and modify, allowing you to focus on the content of your notes rather than learning all the fine details of formatting.
+
+This page is the title page of the notes, and is an html render of `index.qmd`, serving as the main entry point. You can navigate to other chapters by clicking on the links in the sidebar, or at the bottom of a chapter page. The contents of the chapters are:
+
+- @sec-intro provides a quickstart to Quarto, how to render and upload notes to Moodle, and then
+- @sec-ex provides more detail about the aspects of Quarto syntax that are most useful.
+
+The latter chapter is a good starting template from which you can work to adapt existing notes or create new ones. A further (initially hidden) chapter covers some other advanced topics, namely using code and embedding video in notes. This is hidden at first render to make the overheads a little lower.
+
+These notes assume that you are already very familiar with creating LaTeX notes, and work from there. There will doubtless be errors and typos present in this template. If you do spot anything, please feel free to let me know via email.
+
+[Dr Thomas Hudson](https://sites.google.com/view/thudso/), Sept 2026

@@ -1,0 +1,13 @@
+# Store text files with LF line endings on every platform (Windows, macOS, Linux)
+* text=auto eol=lf
+
+# Binary files: never touch line endings
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.zip binary
