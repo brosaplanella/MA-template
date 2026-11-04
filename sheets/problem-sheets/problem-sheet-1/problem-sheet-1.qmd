@@ -30,3 +30,5 @@ Show that
 $$
 \lim_{x \to 0} \frac{1 - \cos x}{x^2} = \frac{1}{2}.
 $$
+
+![The quantity $1 - \cos x$ on the unit circle.](figs/unit-circle){#fig-unit-circle width=40% fig-alt="Unit circle with an angle x marked at the centre; the horizontal gap between the foot of the radius and the point (1, 0) is labelled 1 minus cos x."}

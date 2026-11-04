@@ -23,14 +23,19 @@ _shared/
   style.css        HTML styling (uses --accent, --brand-* from generated/)
   header-*.qmd     editable header boxes, included by sheets
 notes/             Quarto book project -> _build/student/notes
+  _freeze/         stored code-cell results (freeze: auto; committed)
 sheets/            Quarto default project; profiles: student (default), staff
   _quarto-student.yml / _quarto-staff.yml   output dirs and post-render hooks
+src/moduletools/   figure helpers (apply_style, set_zero_axes, colours, tint); installed
+                   editable by `uv sync`, so `import moduletools` works in any code cell
+<project>/**/figs/*.tex   standalone TikZ figures -> .pdf/.svg (committed, reproducible)
 scripts/
   moduleconf.py    Python twin of common.lua (keep in sync)
   leak_check.py    checks _build/student for staff/unreleased material
   post_render_student.py / post_render_staff.py   Quarto hooks
   build.py, make_upload.py
   palette.py       palette.yml -> _shared/generated/ (pre-render hook of both projects)
+  tikz.py          figs/*.tex -> .pdf + .svg when changed (pre-render hook of both projects)
 docs/              development notes for the template (brief, audit, decisions)
 reference/         read-only reference modules (gitignored); never modify
 ```
@@ -43,9 +48,15 @@ uv run scripts/build.py                   # student build + leak check + _build/
 uv run scripts/build.py staff             # staff build
 uv run scripts/build.py student --only sheets
 uv run scripts/leak_check.py              # check _build/student
+uv run scripts/build.py --refresh         # clear notes/_freeze, re-run all notes code
+uv run scripts/tikz.py --force            # rebuild all TikZ figures
+cd sheets && uv run quarto preview <file> # preview (uv run: project Python for code cells)
 ```
 
-Rendering the sheets takes about a minute; the PDF engine is pdflatex.
+Rendering the sheets takes about a minute; the PDF engine is pdflatex. `build.py` empties each
+output folder before rendering (Quarto does not clean output dirs outside the project) and sets
+QUARTO_PYTHON to the project environment. Images are referenced without extension
+(`default-image-extension`: pdf for PDF, svg for HTML).
 
 ## How release control works
 

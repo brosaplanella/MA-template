@@ -9,7 +9,9 @@
 project:
   type: default
   output-dir: ../_build/student/sheets
-  pre-render: ../scripts/palette.py   # colours from _shared/palette.yml
+  pre-render:
+    - ../scripts/palette.py   # colours from _shared/palette.yml
+    - ../scripts/tikz.py      # figs/*.tex -> .pdf and .svg
   render:
     - "problem-sheets/*/*.qmd"
     - "assignments/*/*.qmd"
@@ -31,6 +33,7 @@ format:
     fontsize: 11pt
     geometry:
       - margin=25mm
+    default-image-extension: pdf   # ![](figs/name): .pdf in PDF, .svg in HTML
     pdf-engine: pdflatex   # needed for fontfamily (Domitian, a Palatino-like font)
     fontfamily: domitian
     colorlinks: true
@@ -45,6 +48,7 @@ format:
   html:
     embed-resources: true   # one self-contained .html file per sheet (easy to upload to Moodle)
     html-math-method: mathjax
+    default-image-extension: svg
     theme:
       light: [flatly, ../_shared/generated/theme-light.scss]
       dark: [darkly, ../_shared/generated/theme-dark.scss]

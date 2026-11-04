@@ -1,11 +1,20 @@
 [project]
-name = "module-template"
+name = "moduletools"
 version = "0.1.0"
-description = "Build scripts for a Quarto module (notes, problem sheets, assignments)"
+description = "Build scripts and figure helpers for a Quarto module (notes, problem sheets, assignments)"
 requires-python = ">=3.10"
 dependencies = [
     "pyyaml>=6",
+    # Code cells in the notes and sheets (run by Quarto through Jupyter)
+    "ipykernel>=6",
+    "nbformat>=5",
+    "nbclient>=0.10",
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    # QR codes in the PDF for videos/links shown in the HTML (notes chapter 3)
+    "qrcode>=7.4",
 ]
 
-[tool.uv]
-package = false
+[build-system]
+requires = ["uv_build>=0.11,<0.12"]
+build-backend = "uv_build"
