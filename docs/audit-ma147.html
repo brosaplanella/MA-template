@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>audit-ma147</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="audit-ma147_files/libs/clipboard/clipboard.min.js"></script>
+<script src="audit-ma147_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="audit-ma147_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="audit-ma147_files/libs/quarto-html/popper.min.js"></script>
+<script src="audit-ma147_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="audit-ma147_files/libs/quarto-html/anchor.min.js"></script>
+<link href="audit-ma147_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="audit-ma147_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="audit-ma147_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="audit-ma147_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="audit-ma147_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="audit-of-ma147-phase-1-second-pass" class="level1">
+<h1>Audit of MA147 (Phase 1, second pass)</h1>
+<p><strong>Sources</strong> (all read-only; nothing in <code>reference/</code> was modified, built or rendered):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Folder</th>
+<th>What it is</th>
+<th>Tracked by git?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>reference/MA147</code></td>
+<td>Lecture notes. Quarto <strong>book</strong> at <code>3791ced</code>, 29 files. Public GitHub repo.</td>
+<td>Yes (own repo)</td>
+</tr>
+<tr class="even">
+<td><code>reference/Assignments</code></td>
+<td>4 assessed assignments. Quarto <strong>default</strong> project, 8 <code>.qmd</code> files, plus <code>Old assignments/</code> (the LaTeX originals).</td>
+<td>No (no <code>.git</code>; only <code>.quarto/</code> and <code>_output/</code> build state)</td>
+</tr>
+<tr class="odd">
+<td><code>reference/Problem sheets</code></td>
+<td>10 unassessed problem sheets (6 written, 4 stubs). Quarto <strong>default</strong> project, 20 <code>.qmd</code> files, plus <code>Old problem sheets/</code> (LaTeX).</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Categories:</strong></p>
+<ul>
+<li><strong>Generic</strong>: goes into the template.</li>
+<li><strong>Module</strong>: specific to MA147 and stays behind.</li>
+<li><strong>Content</strong>: lecture material; the template gets a small placeholder that shows the same pattern.</li>
+<li><strong>Shared</strong>: generic <em>and</em> needed by more than one document type. This is the new category in this pass, because “consistent across templates” is decided here.</li>
+</ul>
+<hr>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">1. Summary</h2>
+<ol type="1">
+<li><strong>There are three separate Quarto projects with two separate design lineages.</strong>
+<ul>
+<li>The <strong>notes</strong> are a book: <code>scrbook</code>, Bootswatch flatly/darkly, KaTeX, blue links, no shared filter.</li>
+<li>The <strong>sheets</strong> (assignments + problem sheets) are articles: <code>fancyhdr</code> running header, sans-serif headings, an aubergine accent colour, the default HTML math engine (MathJax), a Lua filter, self-contained HTML.</li>
+<li>The two sheet projects are near-copies of each other, kept in sync <strong>by hand</strong> (“If you change the macros or styling in one project, copy the file to the other”), and they have already drifted: difficulty icons exist only in the problem sheets.</li>
+</ul></li>
+<li><strong>The sheets are the more generalised half.</strong> Their <code>_shared/</code> folder is close to what the template needs:
+<ul>
+<li>one macro file injected into both PDF and HTML;</li>
+<li>a filter for marks, marker notes and centred/info boxes;</li>
+<li>a <code>hide-marking</code> switch;</li>
+<li>a mark-total checker;</li>
+<li>a “CONFIDENTIAL” banner driven by a <code>solutions: true</code> flag;</li>
+<li>module/term metadata set once in <code>_quarto.yml</code>.</li>
+</ul>
+The notes have <strong>none</strong> of this. Their <code>macros.qmd</code> (99 macros from another module) is entirely unused.</li>
+<li><strong>There is still no release mechanism, but there are the building blocks for one.</strong>
+<ul>
+<li>Assignment solutions are separate files with <code>solutions: true</code>, which adds the banner.</li>
+<li><code>hide-marking: true</code> strips the marks and marker notes.</li>
+</ul>
+Together these are almost exactly the “student build of a released solution”: turn off the confidential banner, strip the marking, add a “released on” banner. What is missing is the per-assignment flag, the student/staff split of the <em>outputs</em>, and the leak check. Right now <code>_output/assignment-1/</code> holds <code>assignment-1.pdf</code> and <code>assignment-1-solutions.pdf</code> side by side, so the brief’s main risk (“distributing the wrong build”) is live today.</li>
+<li><strong>The three projects are coupled through the author’s local folder layout.</strong> Two assignment solutions do <code>sys.path.insert(0, "../../Lecture notes")</code> to import <code>utils.py</code>. Sheets refer to “Example 4.4”, “Example 2.13”, “Algorithm 2.1” <strong>of the notes by hard-coded number</strong>. Both break silently when the notes move or are renumbered. This is a strong argument for one repo holding all three types.</li>
+</ol>
+<hr>
+</section>
+<section id="what-is-shared-vs.-per-type-the-consistency-map" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-shared-vs.-per-type-the-consistency-map">2. What is shared vs.&nbsp;per type (the consistency map)</h2>
+<p>This is the core input for the template design.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Concern</th>
+<th>Notes today</th>
+<th>Sheets today</th>
+<th>Template proposal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Module metadata (code, title, term, author)</td>
+<td>Hard-coded in <code>_quarto.yml</code> + <code>index.qmd</code></td>
+<td><code>module</code>, <code>module-code</code>, <code>term</code> in each <code>_quarto.yml</code> (duplicated ×2)</td>
+<td><strong>Shared</strong>: one <code>_module.yml</code></td>
+</tr>
+<tr class="even">
+<td>Maths macros</td>
+<td><code>macros.qmd</code> (unused), hand-typed <code>\mathrm{d}</code> ×482</td>
+<td><code>_shared/macros.tex</code> (9 macros; <code>\dv</code> used 141×, <code>\dd</code> 71×, <code>\eps</code> 29×), injected by the filter into PDF + HTML</td>
+<td><strong>Shared</strong>: one <code>macros.tex</code> via the sheets’ mechanism, for all types</td>
+</tr>
+<tr class="odd">
+<td>Macro names</td>
+<td><code>\bbR</code>, <code>\dd</code>, <code>\bfx</code></td>
+<td><code>\mbR</code>, <code>\dd</code>, <code>\dv</code></td>
+<td>Pick one set (they clash: <code>\bbR</code> vs <code>\mbR</code>)</td>
+</tr>
+<tr class="even">
+<td>HTML math engine</td>
+<td>KaTeX</td>
+<td>MathJax (Quarto default)</td>
+<td><strong>Shared</strong>: one engine; macros must work in it</td>
+</tr>
+<tr class="odd">
+<td>Colours / visual identity</td>
+<td>Bootswatch + blue links</td>
+<td><code>ma147accent</code> aubergine + <code>ma147alert</code> red</td>
+<td><strong>Shared</strong> palette, defined once for LaTeX and CSS</td>
+</tr>
+<tr class="even">
+<td>Lua filter</td>
+<td>none</td>
+<td><code>_shared/ma147.lua</code>, two diverged copies</td>
+<td><strong>Shared</strong>: one filter (or a few small ones), features switched by metadata</td>
+</tr>
+<tr class="odd">
+<td>Figure style (matplotlib)</td>
+<td><code>utils.apply_style()</code> (sans, no serif)</td>
+<td>inline <code>rcParams.update({"font.family": "serif", "mathtext.fontset": "cm"})</code> in 9 places, <em>plus</em> <code>apply_style()</code> in 2</td>
+<td><strong>Shared</strong>: one style function, imported normally (no <code>sys.path</code> hack)</td>
+</tr>
+<tr class="even">
+<td>Figure helpers</td>
+<td><code>utils.py</code></td>
+<td>reached via <code>../../Lecture notes</code></td>
+<td><strong>Shared</strong> Python package</td>
+</tr>
+<tr class="odd">
+<td>TikZ figures</td>
+<td><code>figs/*.tex</code>; <code>make_svg.bat</code> makes PDF + SVG; <code>.svg</code> referenced (PDF goes through rsvg-convert)</td>
+<td><code>.tex</code> next to the sheet; compile commands are in a comment; <code>.content-visible when-format</code> used to pick <code>.pdf</code> vs <code>.svg</code></td>
+<td><strong>Shared</strong>: one Python build script, and one way to reference a figure so each format picks its own file</td>
+</tr>
+<tr class="even">
+<td>Cross-references between documents</td>
+<td>n/a</td>
+<td>“Example 4.4 of the lecture notes” typed by hand</td>
+<td><strong>Shared</strong>: needs a mechanism (see Q6)</td>
+</tr>
+<tr class="odd">
+<td>Output layout</td>
+<td><code>docs/</code> (book)</td>
+<td><code>_output/&lt;sheet&gt;/</code> with student and marker files mixed</td>
+<td><strong>Shared</strong>: <code>_build/student/</code>, <code>_build/staff/</code> (brief)</td>
+</tr>
+<tr class="even">
+<td>HTML packaging</td>
+<td>Folder of files, zipped by <code>make_zip.bat</code> for Moodle</td>
+<td><code>embed-resources: true</code> (one <code>.html</code> per sheet, “easy to upload to Moodle”)</td>
+<td>Per type (book can’t be single-file)</td>
+</tr>
+<tr class="odd">
+<td>Banner for sensitive content</td>
+<td>none</td>
+<td><code>solutions: true</code> → red “CONFIDENTIAL – FOR MARKERS ONLY” (PDF + HTML)</td>
+<td><strong>Shared</strong>: the brief’s banner, <code>-STAFF</code> suffix</td>
+</tr>
+<tr class="even">
+<td>Document class / layout</td>
+<td><code>scrbook</code>, chapters, TOC</td>
+<td><code>article</code>, 25 mm margins, 11pt, running header “module – title</td>
+<td>term”, “Page x of y”</td>
+</tr>
+<tr class="odd">
+<td>Question structure</td>
+<td>n/a</td>
+<td><code>## Question N: Title</code>, parts as <code>(a)</code> lines, nested parts indented 4 spaces</td>
+<td><strong>Shared</strong> between all sheet-like types</td>
+</tr>
+<tr class="even">
+<td>Marks</td>
+<td>n/a</td>
+<td><code>[2]{.marks}</code> (right-aligned), <code>## Question 1 [8]{.marks}</code> → “[8 marks]”, total checked</td>
+<td>Assignments (and future exams-style sheets)</td>
+</tr>
+<tr class="odd">
+<td>Marker notes</td>
+<td>n/a</td>
+<td><code>[..]{.marking}</code> / <code>::: {.marking}</code>, removed by <code>hide-marking</code></td>
+<td>Assignments</td>
+</tr>
+<tr class="even">
+<td>Difficulty</td>
+<td>n/a</td>
+<td><code>[1–3]{.difficulty}</code> → 1–3 spring icons (TikZ in PDF, SVG in HTML)</td>
+<td>Problem sheets; the icon is MA147 flavour (see §5)</td>
+</tr>
+<tr class="odd">
+<td>Header box</td>
+<td>n/a</td>
+<td><code>_shared/header-sheet.qmd</code> (deadline + Moodle submission / “not for credit”)</td>
+<td>Per type, text from settings</td>
+</tr>
+<tr class="even">
+<td>Marker instructions</td>
+<td>n/a</td>
+<td><code>_shared/header-solutions.qmd</code> (hard-codes “20 marks + 5 for clarity”)</td>
+<td>Assignments; numbers from settings</td>
+</tr>
+<tr class="odd">
+<td>“Examinable” box</td>
+<td><code>callout-important</code></td>
+<td>n/a</td>
+<td>Notes</td>
+</tr>
+<tr class="even">
+<td>Theorem-like blocks</td>
+<td><code>#def-</code>, <code>#thm-</code>, <code>#lem-</code>, <code>#exm-</code>, <code>#rem-</code>, <code>#alg-</code>, <code>.proof</code></td>
+<td>none</td>
+<td>Notes (could be available to sheets)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="file-by-file" class="level2">
+<h2 class="anchored" data-anchor-id="file-by-file">3. File-by-file</h2>
+<section id="a.-lecture-notes-referencema147" class="level3">
+<h3 class="anchored" data-anchor-id="a.-lecture-notes-referencema147">3a. Lecture notes (<code>reference/MA147</code>)</h3>
+<p>Unchanged from the first pass, condensed here.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Category</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_quarto.yml</code></td>
+<td>Generic skeleton, Module values</td>
+<td>book, <code>output-dir: docs</code>, <code>freeze: auto</code> + <code>cache: true</code>, KaTeX, flatly/darkly, <code>scrbook</code> A4 pdflatex.</td>
+</tr>
+<tr class="even">
+<td><code>index.qmd</code></td>
+<td>Module + Content</td>
+<td>Preface. The <em>section skeleton</em> (about, where to find, changelog, reading list, aims, structure) is generic.</td>
+</tr>
+<tr class="odd">
+<td><code>1-introduction.qmd</code></td>
+<td>Content, partly generic</td>
+<td>Explains the “boxed = examinable” convention.</td>
+</tr>
+<tr class="even">
+<td><code>2-…</code> to <code>6-*.qmd</code></td>
+<td>Content</td>
+<td>7,100 lines.</td>
+</tr>
+<tr class="odd">
+<td><code>macros.qmd</code></td>
+<td>Drop</td>
+<td>99 macros, 0 used. Replace with the shared <code>macros.tex</code>.</td>
+</tr>
+<tr class="even">
+<td><code>utils.py</code></td>
+<td>Shared</td>
+<td><code>apply_style</code>, <code>set_zero_axes</code> (generic); bifurcation, cobweb, Euler and phase-portrait helpers (generic for dynamics, already used by assignments); <code>plot_covid_data</code> (Module). <code>usetex=True</code> in <code>plot_phase_portrait</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>styles.css</code></td>
+<td>Generic</td>
+<td>One rule.</td>
+</tr>
+<tr class="even">
+<td><code>make_svg.bat</code>, <code>make_zip.bat</code></td>
+<td>Shared, rewrite in Python</td>
+<td>Windows only.</td>
+</tr>
+<tr class="odd">
+<td><code>coffee_cup.ipynb</code></td>
+<td>Content</td>
+<td>Companion notebook, not in the book.</td>
+</tr>
+<tr class="even">
+<td><code>figs/*</code></td>
+<td>Content</td>
+<td><code>centre.png</code> is an orphan. <code>ukhsa-covid-data.csv</code> is read with <code>"figs\\…"</code> (a Windows-only path, 7×).</td>
+</tr>
+<tr class="odd">
+<td><code>CHANGELOG.md</code></td>
+<td>Generic practice</td>
+<td>Dated, student-facing.</td>
+</tr>
+<tr class="even">
+<td><code>README.md</code></td>
+<td>Module, <strong>wrong</strong></td>
+<td>Says MA302.</td>
+</tr>
+<tr class="odd">
+<td><code>.gitignore</code></td>
+<td>Generic</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><code>.github/workflows/*</code></td>
+<td>Rewrite / Drop</td>
+<td>The CI installs no Python. The publish workflow targets gh-pages (commented out).</td>
+</tr>
+<tr class="odd">
+<td><code>.nojekyll</code>, <code>_freeze/site_libs/…</code></td>
+<td>Drop</td>
+<td>Leftovers from MA302.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="b.-sheets-referenceassignments-referenceproblem-sheets" class="level3">
+<h3 class="anchored" data-anchor-id="b.-sheets-referenceassignments-referenceproblem-sheets">3b. Sheets (<code>reference/Assignments</code>, <code>reference/Problem sheets</code>)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Category</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>_quarto.yml</code> (×2)</td>
+<td>Generic skeleton, Module values</td>
+<td><code>type: default</code>, <code>output-dir: _output</code>, <code>render:</code> glob limited to <code>assignment-*/*.qmd</code> / <code>problem-sheet-*/*.qmd</code> (so old <code>.tex</code> and READMEs are skipped). <code>module</code>/<code>module-code</code>/<code>term</code> (the comment says “update once per year”). The problem-sheets copy sets <code>hide-marking: true</code>. PDF: <code>article</code> A4 11pt 25 mm, <code>template-partials: before-body.tex</code>, <code>include-in-header: preamble.tex</code>. HTML: <code>embed-resources</code>, <code>css</code>, no TOC. No <code>html-math-method</code>.</td>
+</tr>
+<tr class="even">
+<td><code>README.md</code> (×2)</td>
+<td>Generic (excellent)</td>
+<td>Already colleague-friendly: commands, the shared-file table, “LaTeX → Quarto” writing tips. This is the seed for the template’s author guide.</td>
+</tr>
+<tr class="odd">
+<td><code>_shared/ma147.lua</code></td>
+<td><strong>Shared, generalised</strong></td>
+<td>Features: injects macros into PDF and HTML; builds the HTML subtitle from module + term; makes <code>.center</code>/<code>.infobox</code>/<code>.marking</code> divs work in PDF; full-width <code>---</code> rules; marks formatting; total check (warns); <code>hide-marking</code>; HTML confidential banner. The problem-sheets copy adds difficulty icons. MA147-named, but the logic is generic. It relies on the title convention <code>"… -- Solutions"</code> to build the running header.</td>
+</tr>
+<tr class="even">
+<td><code>_shared/macros.tex</code></td>
+<td>Shared mechanism, Module list</td>
+<td><code>\newcommand</code> one per line, <code>%</code> comments skipped. Read by the filter, so it works in both formats. <strong>This answers the first pass’s open question about macros in PDF.</strong></td>
+</tr>
+<tr class="odd">
+<td><code>_shared/preamble.tex</code></td>
+<td>Shared (rename colours)</td>
+<td>amsthm, fancyhdr, lastpage, sectsty, tcolorbox; <code>infobox</code>, <code>markingbox</code>, <code>\marksbox</code>; spring icon (problem sheets only). Starts with a UTF-8 BOM (harmless, but strip it).</td>
+</tr>
+<tr class="even">
+<td><code>_shared/before-body.tex</code></td>
+<td>Shared</td>
+<td>Replaces <code>\maketitle</code>: running header/footer, coloured title, red confidential line if <code>solutions</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>_shared/style.css</code></td>
+<td>Shared</td>
+<td>HTML equivalents of the above. Colours are duplicated as hex (<code>#3b2d66</code>, <code>#9c95b3</code>, <code>#f7f6fa</code>, <code>#b00020</code>).</td>
+</tr>
+<tr class="even">
+<td><code>_shared/header-sheet.qmd</code></td>
+<td>Per type, Module text</td>
+<td>Assignments: deadline + “upload via Moodle … single PDF” + <code>?meta:instructions</code>. Problem sheets: “not for credit” + difficulty legend.</td>
+</tr>
+<tr class="odd">
+<td><code>_shared/header-solutions.qmd</code></td>
+<td>Per type, Module text</td>
+<td>Marker instructions with <code>?meta:marked-questions</code>, but “total: 20 marks, plus 5 for clarity” is hard-coded.</td>
+</tr>
+<tr class="even">
+<td><code>assignment-N/assignment-N.qmd</code></td>
+<td>Content</td>
+<td>YAML: <code>title</code>, <code>deadline</code> (free text, e.g.&nbsp;“15/10/2026, Thursday (week 2), 12 noon (UK time).”), <code>instructions</code> (same text in all 4). Questions only, <strong>no marks shown to students</strong>.</td>
+</tr>
+<tr class="odd">
+<td><code>assignment-N/assignment-N-solutions.qmd</code></td>
+<td>Content (<strong>sensitive</strong>)</td>
+<td>YAML: <code>title</code>, <code>marked-questions</code>, <code>solutions: true</code>, sometimes <code>jupyter: python3</code>. Holds solutions only (the question text is not repeated) under <code>## Question N [marks]</code>. Uses <code>.marks</code>/<code>.marking</code>. Two files reach <code>../../Lecture notes/utils.py</code>.</td>
+</tr>
+<tr class="even">
+<td><code>problem-sheet-N/*.qmd</code></td>
+<td>Content</td>
+<td>Same pair structure. Solutions are student-facing (no flag). Sheets 7–10 are 9–13 line stubs. Sheet 6 has TikZ <code>.tex</code> + committed <code>.pdf</code>/<code>.svg</code> and uses <code>.content-visible</code> to pick the format.</td>
+</tr>
+<tr class="odd">
+<td><code>problem-sheet-zz/</code></td>
+<td>Drop</td>
+<td>Empty folder. Its freeze cache (<code>problem-sheet-zz/t</code>) shows it was a scratch test.</td>
+</tr>
+<tr class="even">
+<td><code>Old assignments/</code>, <code>Old problem sheets/</code></td>
+<td>Module (archive)</td>
+<td>The LaTeX originals with <code>.aux</code>/<code>.log</code>/<code>.synctex.gz</code>/<code>.pdf</code> and raster images (<code>.jpg</code> and <code>.png</code> duplicates). Their preambles define the same macro <em>names</em> as the sheets (<code>\mbR</code>, <code>\eps</code>, …), which is where those names come from. They are not template material, and probably not repo material either (see Q4).</td>
+</tr>
+<tr class="odd">
+<td><code>_output/</code>, <code>.quarto/</code></td>
+<td>Drop (gitignore)</td>
+<td>Build output and cache. <code>_output</code> currently contains the <strong>marker solutions</strong>.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="already-generalised-flag-list" class="level2">
+<h2 class="anchored" data-anchor-id="already-generalised-flag-list">4. Already generalised (flag list)</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Where</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Macros in both formats</td>
+<td>sheets <code>macros.tex</code> + filter</td>
+<td><strong>Working and generic.</strong> Adopt for all types.</td>
+</tr>
+<tr class="even">
+<td>Mark formatting + total check</td>
+<td>sheets filter</td>
+<td>Generic. Keep.</td>
+</tr>
+<tr class="odd">
+<td>Marker notes + <code>hide-marking</code></td>
+<td>sheets filter</td>
+<td>Generic, and it is the core of the “released solutions” student build.</td>
+</tr>
+<tr class="even">
+<td>Confidential banner via <code>solutions: true</code></td>
+<td>sheets filter + <code>before-body.tex</code></td>
+<td>Generic. Needs the <code>-STAFF</code> suffix, a staff-only output dir and the “released on” variant.</td>
+</tr>
+<tr class="odd">
+<td>Module metadata in config</td>
+<td>sheets <code>_quarto.yml</code></td>
+<td>Generic, but duplicated. Move it to <code>_module.yml</code>.</td>
+</tr>
+<tr class="even">
+<td>Info box / centred div with PDF parity</td>
+<td>sheets filter + preamble + CSS</td>
+<td>Generic.</td>
+</tr>
+<tr class="odd">
+<td>Difficulty rating</td>
+<td>problem-sheet filter</td>
+<td>Generic <em>idea</em>; the spring icon is MA147 flavour.</td>
+</tr>
+<tr class="even">
+<td>Figure style + helpers</td>
+<td>notes <code>utils.py</code></td>
+<td>Generic, but the sheets don’t use it consistently.</td>
+</tr>
+<tr class="odd">
+<td>TikZ → PDF + SVG</td>
+<td>notes <code>make_svg.bat</code>, sheet <code>.tex</code> comments</td>
+<td>Two ad-hoc versions; one uses <code>--no-fonts --exact-bbox</code>. Unify.</td>
+</tr>
+<tr class="even">
+<td>Single-file HTML for Moodle</td>
+<td>sheets <code>embed-resources</code></td>
+<td>Generic for sheet-type documents.</td>
+</tr>
+<tr class="odd">
+<td>Zip of book HTML for Moodle</td>
+<td>notes <code>make_zip.bat</code></td>
+<td>Generic; rewrite.</td>
+</tr>
+<tr class="even">
+<td>Render scope via <code>project.render</code> globs</td>
+<td>sheets</td>
+<td>Generic. It keeps archives and READMEs out of the build.</td>
+</tr>
+<tr class="odd">
+<td>Author docs (“writing tips”)</td>
+<td>sheets README</td>
+<td>Generic. Seed for the template docs.</td>
+</tr>
+<tr class="even">
+<td>Release mechanism (<code>solutions_released</code>, <code>release_date</code>)</td>
+<td>—</td>
+<td><strong>Does not exist.</strong></td>
+</tr>
+<tr class="odd">
+<td>Student/staff profiles, leak check, private-repo guard</td>
+<td>—</td>
+<td><strong>Do not exist.</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="things-that-quietly-assume-first-year-maths-or-ma147" class="level2">
+<h2 class="anchored" data-anchor-id="things-that-quietly-assume-first-year-maths-or-ma147">5. Things that quietly assume first-year maths (or MA147)</h2>
+<ul>
+<li><strong>Notes</strong>:
+<ul>
+<li>the “boxed = examinable” promise;</li>
+<li>A-Level references;</li>
+<li>“Week 6 breathing week”;</li>
+<li>module URLs with the year in them;</li>
+<li>hand-typed notation;</li>
+<li><code>usetex=True</code>.</li>
+</ul></li>
+<li><strong>Assignment rubric</strong>: “two of three questions marked, out of 20, plus 5 for clarity”, hard-coded in a shared header. Other modules (and MA302) will differ, so it needs to come from settings.</li>
+<li><strong>Submission text</strong>: “upload via Moodle … single PDF … typed or scanned”. This is Warwick-specific; make it a setting with this as the default.</li>
+<li><strong>Deadlines</strong>: free text with Warwick week numbers (“Thursday (week 2), 12 noon (UK time)”). Fine to display, but it should be <em>data</em> (a date plus an optional label), so release dates and checks can use it.</li>
+<li><strong>Question shape</strong>: <code>## Question N</code> with <code>(a)</code>, <code>(b)</code> parts. This assumes short-answer calculus-style questions; it’s fine for most maths. Sheets have no theorem/proof environments; a proof-heavy (pure) module would want <code>.proof</code> and theorem blocks in sheets too.</li>
+<li><strong>Difficulty icons are springs</strong>: a mechanics joke that suits MA147/MA302. Make the glyph configurable (default: stars or plain numbers).</li>
+<li><strong>Figure style</strong>: serif + Computer Modern mathtext in the sheets versus sans in the notes. Neither is wrong, but the two document types will look different side by side.</li>
+<li><strong>Python everywhere</strong>: every sheet that plots needs <code>jupyter: python3</code> (it’s a default project, so there is no auto-detection). A module with no figures should need no Python.</li>
+<li><strong>“Solutions” in the title</strong>: the running header strips <code>-- Solutions</code> / <code>– Solutions</code> from titles with a regex. This assumes English titles and that exact convention.</li>
+</ul>
+<hr>
+</section>
+<section id="beyond-the-three-types-and-even-more" class="level2">
+<h2 class="anchored" data-anchor-id="beyond-the-three-types-and-even-more">6. Beyond the three types (“and even more”)</h2>
+<p>The same infrastructure (macros, filter, palette, figure style, banners, release flags) covers these with little extra work. Listed only so the design leaves room for them, not for v0.1:</p>
+<ul>
+<li><strong>Worksheets / class handouts</strong>: like problem sheets, possibly with gaps to fill in.</li>
+<li><strong>Formula sheet / cheat sheet</strong>: single page, no solutions.</li>
+<li><strong>Computer labs / companion notebooks</strong> (<code>coffee_cup.ipynb</code>): <code>.ipynb</code> or <code>.qmd</code> rendered to HTML.</li>
+<li><strong>Mock / practice exams</strong>: <em>sheet-type with marks</em> (same filter as assignments), but <strong>real exams stay out</strong> per the brief, so a “mock” type must not become a back door.</li>
+<li><strong>Slides</strong>: the brief puts PowerPoints outside, but Quarto <code>revealjs</code>/<code>beamer</code> would reuse the macros and palette if you ever want them.</li>
+</ul>
+<p>A useful way to frame it: there are <strong>two layouts</strong> (book, sheet), <strong>one shared style layer</strong>, and <strong>per-type switches</strong> (marks, marker notes, difficulty, header box, solutions audience). A new type should be “a new switch combination”, not a new copy of <code>_shared/</code>.</p>
+<hr>
+</section>
+<section id="risks-surprises-and-questions" class="level2">
+<h2 class="anchored" data-anchor-id="risks-surprises-and-questions">7. Risks, surprises and questions</h2>
+<section id="risks" class="level3">
+<h3 class="anchored" data-anchor-id="risks">Risks</h3>
+<ol type="1">
+<li><strong>Wrong build distributed: this is live today.</strong> <code>_output/assignment-N/</code> mixes <code>assignment-N.pdf</code> and <code>assignment-N-solutions.pdf</code> (with self-contained HTML of both). Uploading a folder, or picking the wrong file, sends the marker solutions. The banner helps, but the filenames don’t differ enough (<code>-solutions</code> is what the brief reserves for <em>released</em> student solutions, so the staff ones need <code>-STAFF</code>).</li>
+<li><strong>The sheets have no version control.</strong> Neither sheet folder is a git repo (there’s no <code>.git</code> in either; they’re only visible as ignored paths of MA-template). If that’s true for your real copies too, the only history of the assignment solutions is OneDrive.</li>
+<li><strong>Copy-and-sync drift.</strong> The two <code>_shared/</code> folders have already diverged. A third copy for notes, and a fourth for MA302, would make this worse. The template should make sharing structural (one repo, or one shared folder), not manual.</li>
+<li><strong>Breakable coupling</strong>: the <code>../../Lecture notes</code> path hack and hard-coded “Example 4.4” references. Folder names with <strong>spaces</strong> (“Lecture notes”, “Problem sheets”, “Old assignments”) also invite quoting bugs in scripts and CI on all three OSes.</li>
+<li><strong>Public notes vs.&nbsp;private solutions.</strong> You confirmed the MA147 GitHub repo is the lecture notes only, and it is public and linked to students. The brief wants the template repo private because it holds assignment solutions. Putting all three types in one repo (good for consistency) means the notes source stops being public. See Q1.</li>
+<li><strong>Carried over from the first pass</strong>:
+<ul>
+<li>The notes CI likely can’t pass on Linux (no Python step; <code>figs\\…</code> paths).</li>
+<li><code>freeze</code> + <code>cache</code> won’t notice changes to <code>utils.py</code>.</li>
+<li>MA147’s git history still contains MA302 files, including a file named <code>figs/short_term_academic_leave_form.pdf</code>. You said the repo is just lecture notes; it may be worth a one-minute check that this file is a blank form, since the history is public.</li>
+</ul></li>
+</ol>
+</section>
+<section id="surprises" class="level3">
+<h3 class="anchored" data-anchor-id="surprises">Surprises</h3>
+<ul>
+<li>The sheets already solve the problem the brief calls “macros in both formats”. The notes should adopt the sheets’ approach, not the other way round.</li>
+<li><code>hide-marking</code> already turns an assignment solution into a student-safe document. The release feature is maybe 70% there.</li>
+<li>Students never see per-question marks in the assignment <em>sheets</em>; marks live only in the solutions.</li>
+<li>Problem-sheet solutions are student-facing but currently have no “released” notion at all. Are they released with the sheet, or a week later?</li>
+</ul>
+</section>
+<section id="questions-for-you" class="level3">
+<h3 class="anchored" data-anchor-id="questions-for-you">Questions for you</h3>
+<ol type="1">
+<li><strong>One repo or several?</strong> I’d recommend one private repo per module containing notes, problem sheets and assignments (shared settings, macros, filter, utils; real cross-references). The cost is that the notes source is no longer public; students get the built notes via Moodle as now. Is that acceptable, or must the notes source stay public (which means two repos: public notes + private sheets, sharing a template)?</li>
+<li><strong>Problem-sheet solutions</strong>: do they need release control too (released per sheet, like assignments), or are they always public once written? Do they ever contain anything staff-only?</li>
+<li><strong>Settings format</strong>: is it OK to move <code>deadline</code> and <code>release_date</code> into <code>_module.yml</code> as a per-assignment list (date + optional “week N” label), so the sheet header, the release flag and the leak check all read the same entry?</li>
+<li><strong>Old LaTeX folders</strong>: should they go in the repo (e.g.&nbsp;an <code>archive/</code> folder outside the render scope), or stay in OneDrive with the exams?</li>
+<li><strong>One look or two?</strong> Should the notes adopt the sheets’ visual identity (accent colour, sans headings, serif figures), should the sheets adopt the notes’, or should each keep its layout but share palette, macros and figure style?</li>
+<li><strong>Cross-references to the notes</strong> from sheets (“Example 4.4”): worth solving in v0.1 (only feasible in a single repo, e.g.&nbsp;via a generated label→number map), or park it and keep hand-typed numbers?</li>
+<li><strong>Macro names</strong>: adopt the sheets’ set (<code>\mbR</code>, <code>\dv</code>, <code>\dd</code>, <code>\eps</code>; they also match your old LaTeX), drop the notes’ unused <code>macros.qmd</code>, and leave the notes’ hand-typed <code>\mathrm{d}</code> as is (converting it would be a content change)?</li>
+<li><strong>Math engine</strong>: standardise on MathJax (the sheets’ current default, more LaTeX-compatible) or KaTeX (the notes, faster)?</li>
+<li><strong>Difficulty glyph</strong>: keep springs as the default, or make the template neutral (stars or numbers) with springs as MA147’s override?</li>
+<li>Are there other document types you already produce, or plan to, that should be in the first design (worksheets, formula sheet, labs, mock exams)?</li>
+</ol>
+<p>Still not building anything until you’ve reviewed this.</p>
+</section>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
