@@ -37,6 +37,7 @@ scripts/
   palette.py       palette.yml -> _shared/generated/ (pre-render hook of both projects)
   tikz.py          figs/*.tex -> .pdf + .svg when changed (pre-render hook of both projects)
 docs/              development notes for the template (brief, audit, decisions)
+                   the plan and to-do list are the GitHub issues (by milestone), not a file
 reference/         read-only reference modules (gitignored); never modify
 ```
 

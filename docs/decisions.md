@@ -3,6 +3,16 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-04: planning
+
+- The plan and to-do list live in the GitHub issues, grouped by milestone (with the dates from
+  the brief's schedule). This log keeps the decisions only.
+- Editor agents come after the MA302 port (#14). Conventions in two layers: general ones in a
+  separate Claude Code plugin repository, module-specific ones in `docs/conventions.md`.
+- Plugin evals run locally on the author's Claude Pro allowance; no eval in CI for now.
+- Copier wizard before the MA302 port, so MA302 is created with it (#7); updating existing
+  modules with `copier update` later (#13).
+
 ## 2026-11-04: Python
 
 - All Python dependencies (build scripts, Jupyter for code cells, numpy, matplotlib, qrcode) are
