@@ -125,6 +125,20 @@ Sheet features (see the examples):
 | `{{< sheet deadline >}}` | a setting from `_module.yml` for this sheet |
 | `see {{< notes thm-FTC >}} of the lecture notes` | "see Theorem 2.1 of the lecture notes"; in HTML, a link to it in the notes on Moodle (see below) |
 
+**Corrections after release.** List them in the front matter of the sheet (or its solutions)
+you corrected; each shows as an "Updated 14 October 2026: ..." line under the header,
+newest first. Without `changes`, nothing is shown. For an assignment, also post a Moodle
+announcement.
+
+```yaml
+---
+title: "Problem Sheet 1"
+changes:
+  - date: 2026-10-14
+    text: "Question 2(a): the upper limit of the integral is $1$, not $2$."
+---
+```
+
 ### Parts of a question (lists)
 
 Write parts as `(a)`, `(b)`, ... (or `(i)`, `1.`, `-`); the label shows as written in both PDF

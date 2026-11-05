@@ -114,6 +114,15 @@ div.marking > :last-child {
   margin-bottom: 0;
 }
 
+/* changes: in a sheet's front matter: "Updated <date>: ..." lines under the header */
+.doc-changes {
+  margin-bottom: 1rem;
+}
+
+.doc-changes p {
+  margin-bottom: 0.25rem;
+}
+
 /* Banner at the top of a sheet: staff copy (alert) or released solutions */
 .doc-banner {
   color: var(--accent);
