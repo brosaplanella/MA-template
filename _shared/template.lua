@@ -42,7 +42,7 @@ local icon_styles = {
 
 -- A module's own icon: difficulty-icon is a path (relative to the repository
 -- root, without extension) to an image with a .pdf (for PDF) and an .svg (for
--- HTML), for example a TikZ figure sheets/figs/spring.tex built by
+-- HTML), for example a TikZ figure sheets/figs/bolt.tex built by
 -- scripts/tikz.py. The SVG is inlined, so it also works in self-contained HTML.
 local function read_file(path)
   local f = io.open(path, "rb")
@@ -85,19 +85,11 @@ local function difficulty_icons(span)
   local n = difficulty_level(span)
   local style_name = common.str(common.config()["difficulty-icon"]) or "stars"
   local label = "Difficulty: " .. difficulty_names[n]
-  if style_name == "numbers" then
-    if quarto.doc.is_format("latex") then
-      return pandoc.RawInline("latex", "\\texorpdfstring{\\difficultynumber{" .. n .. "}}{}")
-    end
-    return pandoc.RawInline("html", '<span class="difficulty difficulty-number" title="'
-      .. label .. '">(' .. n .. ")</span>")
-  end
   local style = icon_styles[style_name] or image_style(style_name)
   if not style then
-    quarto.log.warning("difficulty-icon '" .. style_name .. "': use stars, numbers, "
-      .. "or the path of an image with .pdf and .svg versions (no extension, "
-      .. "relative to the repository root); using stars")
-    style = icon_styles.stars
+    error("difficulty-icon '" .. style_name .. "' in _module.yml: no such image. Use "
+      .. "stars, or the path of an image with .pdf and .svg versions (no extension, "
+      .. "relative to the repository root).", 0)
   end
   if quarto.doc.is_format("latex") then
     -- \texorpdfstring keeps the icons out of the PDF bookmarks
