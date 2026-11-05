@@ -2,7 +2,8 @@
 -- Template filter, used by the notes and the sheets.
 --
 -- Everywhere:
---  * injects the macros in _shared/macros.tex into both PDF and HTML output
+--  * injects the macros in _shared/macros-template.tex and _shared/macros.tex (the
+--    module's, which win over the template's) into both PDF and HTML output
 --  * makes ::: {.center} and ::: {.infobox} divs work in PDF too
 --  * lists: keeps (a) / a) labels in HTML (see style.css)
 --
@@ -110,12 +111,13 @@ end
 
 -- Macros ---------------------------------------------------------------------
 
-local function read_macros()
-  local path = quarto.utils.resolve_path("macros.tex")
+-- Definitions in a macros file: its non-empty, non-comment lines.
+local function macro_lines(name)
+  local path = quarto.utils.resolve_path(name)
   local f = io.open(path, "r")
   if not f then
     quarto.log.warning("Could not open " .. path)
-    return ""
+    return {}
   end
   local lines = {}
   for line in f:lines() do
@@ -124,6 +126,29 @@ local function read_macros()
     end
   end
   f:close()
+  return lines
+end
+
+-- The macro a line defines: \newcommand{\bfx}..., \def\bfx..., etc. give "bfx".
+local function defined_name(line)
+  return line:match("^%s*\\%a+%*?%s*{?%s*\\(%a+)")
+end
+
+-- macros-template.tex, then the module's macros.tex. A name the module defines
+-- replaces the template's definition, so the module never needs \renewcommand.
+local function read_macros()
+  local own = macro_lines("macros.tex")
+  local mine = {}
+  for _, line in ipairs(own) do
+    local name = defined_name(line)
+    if name then mine[name] = true end
+  end
+  local lines = {}
+  for _, line in ipairs(macro_lines("macros-template.tex")) do
+    local name = defined_name(line)
+    if not (name and mine[name]) then table.insert(lines, line) end
+  end
+  for _, line in ipairs(own) do table.insert(lines, line) end
   return table.concat(lines, "\n")
 end
 
