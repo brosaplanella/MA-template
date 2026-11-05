@@ -4,8 +4,10 @@ Guidance for coding agents working in this repository. Read README.md for the us
 
 ## What this is
 
-A Quarto module template: lecture notes (book), problem sheets and assignments, each rendered to
-PDF and HTML, sharing one style layer. Assignment solutions are the only sensitive material.
+A module's teaching materials in Quarto: lecture notes (book), problem sheets and assignments,
+each rendered to PDF and HTML, sharing one style layer. Assignment solutions are the only
+sensitive material. Created from the MA-template copier template
+(https://github.com/brosaplanella/MA-template); `.copier-answers.yml` records the setup.
 
 ## Repository map
 
@@ -41,15 +43,13 @@ scripts/
   tikz.py          figs/*.tex -> .pdf + .svg when changed (pre-render hook of both projects)
   notes_xref.py    notes/.quarto/xref (Quarto internal) -> label map for {{< notes >}}
                    (post-render hook of the notes)
-docs/              development notes for the template (brief, audit, decisions)
-                   the plan and to-do list are the GitHub issues (by milestone), not a file
-reference/         read-only reference modules (gitignored); never modify
 ```
 
 Template-owned files start with a "Template file: do not edit it in a module" line; the list
-of module-owned files is in README.md ("Template and module files"). Changes to template
-behaviour go in template-owned files, never in module-owned ones (and vice versa: no module
-content in template files). Mark any new template file the same way.
+of module-owned files is in README.md ("Template and module files"). **In a module, do not edit
+template-owned files**: `uvx copier update` would overwrite or conflict with the change.
+If template behaviour must change, describe the change for an issue on the template
+repository instead.
 
 ## Commands
 
@@ -87,7 +87,7 @@ QUARTO_PYTHON to the project environment. Images are referenced without extensio
 2. Never commit build outputs (`_build/`), `_local.yml`, or anything from `_scratch/`.
 3. Never read, list or search outside this repository. Exam material lives elsewhere and must
    never be accessed. Ask the author if a task seems to need it.
-4. Never modify `reference/`.
+4. Never edit `.copier-answers.yml` or template-owned files (see above).
 5. Cross-platform: Python with `pathlib` and explicit UTF-8; no bash/PowerShell-only logic, no
    symlinks. Watch file-name case.
 6. Keep `common.lua` and `moduleconf.py` consistent.

@@ -1,8 +1,9 @@
-# Module template (Quarto)
+# Module materials (Quarto)
 
-A template for a university module: **lecture notes**, **problem sheets** and **assignments**,
-each produced as **PDF and HTML** from one source, with one shared style. Assignment solutions
-live in the same repository but never reach students by accident.
+The **lecture notes**, **problem sheets** and **assignments** of this module, each produced as
+**PDF and HTML** from one source, with one shared style. Assignment solutions live in the same
+repository but never reach students by accident. This repository was created from the
+[module template](https://github.com/brosaplanella/MA-template); see "Template updates" below.
 
 > **Keep this repository private.** It holds assignment solutions. Git history is forever: a
 > solution that was ever committed stays in the history even after you delete the file.
@@ -24,7 +25,7 @@ Everything works on Windows, macOS and Linux.
 
 ### Where to keep this folder (OneDrive users)
 
-Keep the repository **outside** OneDrive/SharePoint-synced folders (for example `C:\dev\MA000`).
+Keep the repository **outside** OneDrive/SharePoint-synced folders (for example `C:\dev\MA302`).
 Syncing clashes with Quarto's temporary files and with git. GitHub (private) is the backup:
 commit and push at the end of every working session.
 
@@ -32,11 +33,11 @@ Material that is not Quarto (exams, scans, handwritten notes, slides) stays in y
 module folder, for example:
 
 ```
-OneDrive/.../MA000/
+OneDrive/.../MA302/
   exams/        never in this repository
   slides/
   ...
-C:/dev/MA000/   this repository (notes, problem sheets, assignments)
+C:/dev/MA302/   this repository (notes, problem sheets, assignments)
 ```
 
 ## Build
@@ -68,7 +69,7 @@ Unreleased solutions show only a placeholder unless you add `--profile staff`. K
 
 ### Uploading to Moodle
 
-- **Notes**: in Moodle, *Add an activity or resource → File*, upload `_build/upload/MA000-notes.zip`,
+- **Notes**: in Moodle, *Add an activity or resource → File*, upload `_build/upload/<code>-notes.zip`,
   click it, choose *Unzip*, open the `notes` folder, click `index.html` and choose
   *Set main file*. Next time, upload and unzip the new zip in the same place.
   After the first release of the year, add an entry to `notes/changes.qmd` (the last page of
@@ -116,7 +117,7 @@ _scratch/                   your old material while rewriting (not committed, no
 To add a sheet, copy a folder (e.g. `problem-sheet-1` to `problem-sheet-2`), rename both files
 to match the folder, and add an entry for it in `_module.yml`.
 
-Sheet features (see the examples):
+Sheet features (the stub sheets use the basic ones):
 
 | You write | You get |
 |---|---|
@@ -205,13 +206,13 @@ ax.plot(x, y, color=colours["purple"])          # palette colours
 In the notes, code results are stored in `notes/_freeze/` (committed), and a chapter runs
 again only when it changes. If you change `src/moduletools`, rebuild with `--refresh`.
 
-**TikZ figures.** Put a standalone LaTeX file in a `figs/` folder (see
-`sheets/problem-sheets/problem-sheet-1/figs/unit-circle.tex`). Before every render it is
-compiled to `.pdf` and `.svg`. Include it **without an extension**, and the PDF output uses
-the `.pdf` while the HTML uses the `.svg`:
+**TikZ figures.** Put a standalone LaTeX file (`\documentclass{standalone}`) in a `figs/`
+folder next to the chapter or sheet, e.g. `sheets/problem-sheets/problem-sheet-1/figs/circle.tex`.
+Before every render it is compiled to `.pdf` and `.svg`. Include it **without an extension**,
+and the PDF output uses the `.pdf` while the HTML uses the `.svg`:
 
 ```markdown
-![Caption.](figs/unit-circle){#fig-unit-circle width=40% fig-alt="Description."}
+![Caption.](figs/circle){#fig-circle width=40% fig-alt="Description."}
 ```
 
 Figures can use the palette colours after `\input{palette.tex}`.
@@ -270,7 +271,25 @@ overwriting your work.
 so. `_shared/generated/` is made by the scripts: never edit it by hand. If a template file
 does not do what you need, open an issue on the template repository instead.
 
+`.copier-answers.yml` records your answers to the setup questions; do not edit it.
+
+## Template updates
+
+When the template gets fixes or features, apply them with [copier](https://copier.readthedocs.io/):
+
+```
+git status                 # commit your work first
+uvx copier update --defaults   # latest template release, keeping your answers
+git diff                   # review what changed
+uv sync
+uv run scripts/build.py    # check both builds
+uv run scripts/build.py staff
+```
+
+Only template files change; your notes, sheets and settings are left alone. Two files mix
+both (`notes/_quarto.yml` and `pyproject.toml`): if you and the template changed the same
+lines, copier marks the conflict in the file (`<<<<<<<`) for you to resolve. Then commit.
+
 ## Credits
 
-The placeholder lecture notes are *Quarto Lecture Notes* by Thomas Hudson (MIT licence,
-see [notes/CREDITS.md](notes/CREDITS.md)). The PDF font choice (Domitian) follows his template.
+The PDF font choice (Domitian) follows *Quarto Lecture Notes* by Thomas Hudson (MIT licence).

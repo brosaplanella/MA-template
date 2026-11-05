@@ -3,6 +3,24 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-06: copier wizard (#7)
+
+- This repository is just the template; module files live in `template/` (copier
+  `_subdirectory`). The tutorial content moved out (tag `pre-split`) to a separate public
+  manual repository, generated from the template (#30).
+- Six questions: module code, title, term, lecturer, number of problem sheets (default 10)
+  and assignments (default 4), 0 for none. Not asked (changed later in `_module.yml`):
+  difficulty icon (stars; the numbers style was dropped), solution-release default (`false`).
+  The private-repository guard is always included.
+- `template/` is not buildable on its own (the numbered sheet folders come from copier's
+  `yield` tag); `scripts/test_template.py` generates modules and builds them. This replaces
+  the earlier idea of a buildable MA000 with `.jinja` twins, which would drift.
+- Jinja markers are `[[ ]]` and `[% %]`, so Quarto shortcodes need no escaping.
+- Module-owned files are `_skip_if_exists`; `notes/_quarto.yml` and `pyproject.toml` are mixed
+  and merged by `copier update`.
+- Both this repository and the manual are public; module repositories stay private.
+- Releases are git tags (`v0.1.0`, then `v0.1.x` until the freeze).
+
 ## 2026-11-05: MA302 audit answers (#9)
 
 - This repository stays the template (MA000 example); MA302 gets its own repository, created
