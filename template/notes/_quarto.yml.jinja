@@ -11,16 +11,14 @@ project:
     - ../scripts/notes_xref.py  # labels and numbers for {{< notes label >}} in the sheets
 
 book:
-  title: "MA000 Example Module"   # keep in step with module.code/title in _module.yml
+  title: "[[ module_code ]] [[ module_title ]]"   # keep in step with module.code/title in _module.yml
   subtitle: "Lecture notes"
-  author: "Module lecturer"
+  author: "[[ lecturer ]]"
   date: today
   date-format: "D MMMM YYYY"
   chapters:
     - index.qmd
     - chapter1.qmd
-    - chapter2.qmd
-    - chapter3.qmd
     - changes.qmd   # list of changes for students: keep it last
   downloads: [pdf]
 

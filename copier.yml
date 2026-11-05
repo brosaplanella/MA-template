@@ -1,0 +1,82 @@
+# Copier template for a module (notes, problem sheets, assignments).
+#
+#   uvx copier copy gh:brosaplanella/MA-template MA302     create a module
+#   uvx copier update                                       (inside it) apply template updates
+#
+# Everything under template/ is copied. Files ending in .jinja are filled in from the answers
+# (markers [[ ... ]] and [% ... %], so that Quarto's {{< ... >}} shortcodes are left alone).
+
+_subdirectory: template
+_min_copier_version: "9.3"   # the yield tag, used for the numbered sheet folders
+_answers_file: .copier-answers.yml
+_envops:
+  block_start_string: "[%"
+  block_end_string: "%]"
+  variable_start_string: "[["
+  variable_end_string: "]]"
+  comment_start_string: "[#"
+  comment_end_string: "#]"
+  keep_trailing_newline: true
+  trim_blocks: true
+  lstrip_blocks: true
+
+# Module-owned files: created once, never touched by `copier update`
+# (see "Template and module files" in template/README.md).
+_skip_if_exists:
+  - _module.yml
+  - _shared/macros.tex
+  - _shared/palette.yml
+  - _shared/header-*.qmd
+  - _shared/generated/**
+  - notes/*.qmd
+  - notes/refs.bib
+  - sheets/problem-sheets/**
+  - sheets/assignments/**
+  - uv.lock
+
+_message_after_copy: |
+  Module [[ module_code ]] created in [[ _copier_conf.dst_path ]]. Next:
+
+    cd [[ _copier_conf.dst_path ]]
+    uv sync
+    uv run scripts/build.py
+
+  Then create a PRIVATE GitHub repository for it (it will hold solutions) and push.
+  See README.md for writing notes and sheets.
+
+module_code:
+  type: str
+  help: Module code (for example MA302)
+  validator: >-
+    [% if not (module_code | regex_search('^[A-Z]{2,4}[0-9]{3,5}$')) %]Use a module code
+    such as MA302 (capital letters, then digits)[% endif %]
+
+module_title:
+  type: str
+  help: Module title (for example Electromagnetism)
+  validator: "[% if not module_title.strip() %]Give the module title[% endif %]"
+
+term:
+  type: str
+  help: Term and academic year, shown on every sheet
+  default: "Term 1, 2026/27"
+  validator: >-
+    [% if not (term | regex_search('[0-9]{4}/[0-9]{2}$')) %]End with the academic year,
+    for example "Term 1, 2026/27"[% endif %]
+
+lecturer:
+  type: str
+  help: Lecturer (shown as the author of the notes)
+  validator: "[% if not lecturer.strip() %]Give the lecturer's name[% endif %]"
+
+n_problem_sheets:
+  type: int
+  help: How many problem sheets? (0 for none)
+  default: 10
+  validator: "[% if n_problem_sheets < 0 or n_problem_sheets > 30 %]Between 0 and 30[% endif %]"
+
+n_assignments:
+  type: int
+  help: How many assignments? (0 for none)
+  default: 4
+  validator: "[% if n_assignments < 0 or n_assignments > 30 %]Between 0 and 30[% endif %]"
