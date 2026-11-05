@@ -20,6 +20,8 @@
 --  * release control: in a student build, the content of unreleased solutions
 --    is replaced by a placeholder, which scripts/post_render_student.py deletes
 --  * banner: "staff copy" (staff build) or "released on" (released solutions)
+--  * changes after release: `changes:` in the front matter gives one
+--    "Updated <date>: ..." line per entry under the header box (none: nothing)
 --  * hidden marker (HTML <meta>, PDF info) read by scripts/leak_check.py
 
 local common = dofile(quarto.utils.resolve_path("common.lua"))
@@ -300,6 +302,52 @@ local function HorizontalRule()
   end
 end
 
+-- Changes after release -------------------------------------------------------
+
+-- `changes:` in a sheet's front matter (a list of date + text): one line per entry,
+-- newest first, "Updated 12 February 2027: ...", under the header box. Nothing is
+-- shown without entries; withheld solutions keep only their placeholder.
+local function add_changes(doc)
+  if not info or withheld then return nil end
+  local list = doc.meta.changes
+  if not list or pandoc.utils.type(list) ~= "List" or #list == 0 then return nil end
+
+  local entries = {}
+  for _, e in ipairs(list) do
+    local date = e.date and common.str(e.date)
+    if not date or not e.text then
+      quarto.log.warning(info.id .. ": an entry in `changes` needs both `date` and `text`.")
+    else
+      if common.in_future(date) then
+        quarto.log.warning(info.id .. ": the change dated " .. date .. " is in the future.")
+      end
+      local text = pandoc.utils.type(e.text) == "Inlines" and e.text
+        or pandoc.Inlines(pandoc.utils.stringify(e.text))
+      table.insert(entries, { date = date, text = text })
+    end
+  end
+  if #entries == 0 then return nil end
+  table.sort(entries, function(a, b) return a.date > b.date end)
+
+  local paras = pandoc.Blocks({})
+  for _, e in ipairs(entries) do
+    local line = pandoc.Inlines({
+      pandoc.Strong("Updated " .. common.format_date(e.date, false) .. ":"), pandoc.Space() })
+    line:extend(e.text)
+    paras:insert(pandoc.Para(line))
+  end
+
+  -- After the header box (and marker notes at the top), else at the very top.
+  local at = 1
+  while doc.blocks[at] and doc.blocks[at].t == "Div"
+      and (doc.blocks[at].classes:includes("infobox")
+        or doc.blocks[at].classes:includes("marking")) do
+    at = at + 1
+  end
+  doc.blocks:insert(at, pandoc.Div(paras, { class = "doc-changes" }))
+  return doc
+end
+
 -- Banner text for this document, and whether it is a warning (red).
 local function banner()
   if staff then
@@ -379,6 +427,7 @@ return {
   { Pandoc = setup },
   { Pandoc = strip_marking },
   { Pandoc = check_totals },
+  { Pandoc = add_changes },
   { Header = Header },  -- before Span, so heading totals get their own style
   { Span = Span, Div = Div, HorizontalRule = HorizontalRule,
     OrderedList = OrderedList, Pandoc = Pandoc },
