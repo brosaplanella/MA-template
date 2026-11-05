@@ -3,6 +3,7 @@
 -- Everywhere:
 --  * injects the macros in _shared/macros.tex into both PDF and HTML output
 --  * makes ::: {.center} and ::: {.infobox} divs work in PDF too
+--  * lists: keeps (a) / a) labels in HTML (see style.css)
 --
 -- Sheets (problem sheets and assignments) only:
 --  * module code/title and term from _module.yml, for the headers
@@ -248,6 +249,25 @@ local function Div(el)
   end
 end
 
+-- Lists ------------------------------------------------------------------------
+
+-- Pandoc's HTML drops the delimiter of ordered lists: (a), a) and a. all become
+-- <ol type="a">. Keep delimiter and numbering as classes on a wrapper, for the
+-- labels in style.css (CSS cannot tell type="a" from type="A").
+local delimiter_class = { TwoParens = "list-parens", OneParen = "list-paren" }
+local style_class = {
+  LowerAlpha = "list-lower-alpha", UpperAlpha = "list-upper-alpha",
+  LowerRoman = "list-lower-roman", UpperRoman = "list-upper-roman",
+}
+
+local function OrderedList(el)
+  if not quarto.doc.is_format("html") then return nil end
+  local a = el.listAttributes
+  local classes = (delimiter_class[a.delimiter] or "list-period") .. " "
+    .. (style_class[a.style] or "list-decimal")
+  return pandoc.Div(el, { class = classes })
+end
+
 local function HorizontalRule()
   if info and quarto.doc.is_format("latex") then
     return pandoc.RawBlock("latex", "\\medskip\\hrule\\bigskip")
@@ -335,5 +355,5 @@ return {
   { Pandoc = check_totals },
   { Header = Header },  -- before Span, so heading totals get their own style
   { Span = Span, Div = Div, HorizontalRule = HorizontalRule,
-    Pandoc = Pandoc },
+    OrderedList = OrderedList, Pandoc = Pandoc },
 }
