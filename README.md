@@ -146,8 +146,16 @@ after `(a) `:
 ```
 
 Every paragraph of a part then lines up with its first line, with the label hanging to the
-left. A paragraph that is not indented ends the list: it goes back to the margin, and the
-render warns if it sits between two parts.
+left. A paragraph that is not indented is not part of any part: it sits at the margin, and
+the next part continues the numbering. Use this for context that holds from that point on:
+
+```
+(b) Find the equilibrium.
+
+Now assume that each year we remove $c$ adults from the population.
+
+(c) Find the new equilibrium.
+```
 
 ### References to the notes
 
