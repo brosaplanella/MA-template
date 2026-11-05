@@ -1,0 +1,12 @@
+# First chapter {#sec-first-chapter}
+
+Write the first chapter here. Add more chapters as `chapter2.qmd` and so on, and list them
+in `_quarto.yml` (before `changes.qmd`).
+
+## A section {#sec-first-section}
+
+::: {#def-example}
+## Example definition
+A definition, numbered and labelled so that sheets can refer to it with
+`{{< notes def-example >}}`.
+:::

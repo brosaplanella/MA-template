@@ -1,0 +1,15 @@
+# Build outputs (student, staff and upload folders)
+_build/
+# Old material kept at hand while rewriting; local only, not backed up
+_scratch/
+# Personal settings for this computer
+_local.yml
+# Quarto and Python caches
+# (Quarto writes notes/.gitignore and sheets/.gitignore on every render; their rules are
+# already here, so they are not committed)
+/notes/.gitignore
+/sheets/.gitignore
+.quarto/
+**/*.quarto_ipynb
+.venv/
+__pycache__/

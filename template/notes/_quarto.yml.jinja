@@ -1,0 +1,62 @@
+# Lecture notes (a Quarto book). Build from the repository root with
+#   uv run scripts/build.py
+# or, inside this folder, `quarto render` / `quarto preview`.
+project:
+  type: book
+  output-dir: ../_build/student/notes
+  pre-render:
+    - ../scripts/palette.py   # colours from _shared/palette.yml
+    - ../scripts/tikz.py      # figs/*.tex -> .pdf and .svg
+  post-render:
+    - ../scripts/notes_xref.py  # labels and numbers for {{< notes label >}} in the sheets
+
+book:
+  title: "[[ module_code ]] [[ module_title ]]"   # keep in step with module.code/title in _module.yml
+  subtitle: "Lecture notes"
+  author: "[[ lecturer ]]"
+  date: today
+  date-format: "D MMMM YYYY"
+  chapters:
+    - index.qmd
+    - chapter1.qmd
+    - changes.qmd   # list of changes for students: keep it last
+  downloads: [pdf]
+
+# Code cells run once and their results are stored in _freeze/ (committed); a chapter
+# runs again only when it changes. After changing src/moduletools, rebuild with
+# `uv run scripts/build.py --refresh`.
+execute:
+  freeze: auto
+
+bibliography: refs.bib
+csl: american-mathematical-society-numeric.csl
+
+filters:
+  - ../_shared/template.lua
+
+format:
+  html:
+    toc: true
+    html-math-method: mathjax
+    default-image-extension: svg   # ![](figs/name): .svg in HTML, .pdf in PDF
+    theme:
+      light: [flatly, ../_shared/generated/theme-light.scss]
+      dark: [darkly, ../_shared/generated/theme-dark.scss]
+    css: ../_shared/style.css
+  pdf:
+    documentclass: scrbook
+    papersize: a4
+    toc: true
+    toc-depth: 2
+    default-image-extension: pdf
+    pdf-engine: pdflatex   # needed for fontfamily (Domitian, a Palatino-like font)
+    fontfamily: domitian
+    colorlinks: true
+    linkcolor: accent
+    toccolor: accent
+    urlcolor: accent
+    citecolor: accent
+    include-in-header:
+      - ../_shared/generated/palette.tex
+      - ../_shared/preamble.tex
+      - ../_shared/preamble-notes.tex
