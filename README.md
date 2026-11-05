@@ -196,6 +196,19 @@ the `.pdf` while the HTML uses the `.svg`:
 
 Figures can use the palette colours after `\input{palette.tex}`.
 
+### Maths and LaTeX packages
+
+The HTML shows maths with MathJax, which understands maths-mode LaTeX (including the AMS
+packages) but cannot load packages: `\usepackage` works in the PDF only. So:
+
+- **Notation:** define it in `_shared/macros.tex` with `\newcommand` instead of loading a
+  package (e.g. a `\dv` macro instead of the `physics` package). It works in PDF and HTML.
+- **Figures:** standalone `figs/*.tex` files are compiled by LaTeX on their own, so they can
+  load any package (`tikz`, `pgfplots`, `siunitx`, ...).
+- **Layout** (boxes, marks, parts): use the features above, which look the same in both.
+
+If you need a package that none of these covers, open an issue on the template repository.
+
 ### Colours
 
 All colours are defined once in [`_shared/palette.yml`](_shared/palette.yml) (Warwick brand
