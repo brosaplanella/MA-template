@@ -71,6 +71,8 @@ Unreleased solutions show only a placeholder unless you add `--profile staff`. K
 - **Notes**: in Moodle, *Add an activity or resource → File*, upload `_build/upload/MA000-notes.zip`,
   click it, choose *Unzip*, open the `notes` folder, click `index.html` and choose
   *Set main file*. Next time, upload and unzip the new zip in the same place.
+  After the first release of the year, add an entry to `notes/changes.qmd` (the last page of
+  the notes) for every new upload, so students can see what changed.
 - **Sheets**: upload the files in `_build/upload/sheets/` (each HTML file is self-contained).
 
 ## Releasing solutions
@@ -240,7 +242,8 @@ overwriting your work.
 
 - `_module.yml`: module code, title, term, deadlines, release flags
 - `_shared/macros.tex`, `_shared/palette.yml`, `_shared/header-*.qmd`
-- the notes chapters and `notes/_quarto.yml` (title, chapter list), and `notes/refs.bib`
+- the notes chapters, `notes/changes.qmd` (changes for students), `notes/_quarto.yml`
+  (title, chapter list) and `notes/refs.bib`
 - the sheets in `sheets/problem-sheets/` and `sheets/assignments/`, and all `figs/`
 - `pyproject.toml`: add the Python packages your code cells need (then `uv sync`)
 
