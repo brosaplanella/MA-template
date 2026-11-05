@@ -21,9 +21,9 @@ module:
 notes:
   url: ""
 
-# Icon for [1]{.difficulty} etc. in problem sheets: stars, numbers, or your own image:
-# its path without extension, relative to this folder, with .pdf and .svg versions
-# (e.g. a TikZ figure sheets/figs/spring.tex gives difficulty-icon: sheets/figs/spring)
+# Icon for [1]{.difficulty} etc. in problem sheets: stars, or your own image: its path
+# without extension, relative to this folder, with .pdf and .svg versions
+# (e.g. a TikZ figure sheets/figs/bolt.tex gives difficulty-icon: sheets/figs/bolt)
 difficulty-icon: stars
 
 problem-sheets:
