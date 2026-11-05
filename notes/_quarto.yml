@@ -21,6 +21,7 @@ book:
     - chapter1.qmd
     - chapter2.qmd
     - chapter3.qmd
+    - changes.qmd   # list of changes for students: keep it last
   downloads: [pdf]
 
 # Code cells run once and their results are stored in _freeze/ (committed); a chapter
