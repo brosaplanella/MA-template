@@ -1,5 +1,9 @@
 # Module template (Quarto)
 
+> **Moving to copier (#7):** the module now lives in [`template/`](template/); build it from
+> there (`cd template`, then the commands below). This README is being split into a module
+> README and one for template maintainers.
+
 A template for a university module: **lecture notes**, **problem sheets** and **assignments**,
 each produced as **PDF and HTML** from one source, with one shared style. Assignment solutions
 live in the same repository but never reach students by accident.

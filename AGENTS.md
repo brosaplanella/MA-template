@@ -2,6 +2,12 @@
 
 Guidance for coding agents working in this repository. Read README.md for the user view.
 
+**Layout (copier template, #7):** the module that copier copies lives in `template/`, which is
+also a buildable example module. All paths in the map below are relative to `template/`, and
+all commands run there (`cd template`). The repository root holds only maintainer material
+(`docs/`, `reference/`, this file). This file and the README are split into maintainer and
+module versions in step 6 of #7.
+
 ## What this is
 
 A Quarto module template: lecture notes (book), problem sheets and assignments, each rendered to
