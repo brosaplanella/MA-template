@@ -139,6 +139,10 @@ changes:
 ---
 ```
 
+The rationale behind having them in the frontmatter rather than directly in the text
+is that the frontmatter is easier to find and edit, and helps with clean-up when rolling
+the project over to a new year.
+
 ### Parts of a question (lists)
 
 Write parts as `(a)`, `(b)`, ... (or `(i)`, `1.`, `-`); the label shows as written in both PDF
