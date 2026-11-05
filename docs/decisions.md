@@ -3,6 +3,22 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-05: MA302 audit answers (#9)
+
+- This repository stays the template (MA000 example); MA302 gets its own repository, created
+  from the template (#11).
+- LaTeX import becomes a template tool, deterministic (Pandoc + filter) with a report of what
+  is left for an agent or the author: sheets first, then notes (#25).
+- The copier wizard asks how many problem sheets (default 10) and assignments (default 4),
+  0 meaning none, and creates the stubs (#7). MA302 has no assignments (Moodle quizzes).
+- Macros: a template-owned set (the most used in MA147/MA302) plus the module's own file; the
+  module's definition wins (#26). Ports keep only the macros they use.
+- Notes are published on Moodle only. A draft GitHub Pages workflow for the notes is kept,
+  off by default and guarded against solutions (#28).
+- The changelog lives at the end of the notes (`notes/changes.qmd`), per academic year,
+  starting from that year's first version (#27).
+- MA302's difficulty icon: lightning bolts, as a custom icon in the MA302 repository.
+
 ## 2026-11-05: template and module files (#10)
 
 - `_shared/module.lua` is renamed `_shared/template.lua`: it is template code, the same in
