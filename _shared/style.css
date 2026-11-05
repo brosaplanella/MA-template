@@ -22,6 +22,45 @@
   height: auto;
 }
 
+/* Lists laid out as in the PDF: the label sits in the margin and every paragraph,
+   display and nested list of an item lines up with the item's text. Indents as
+   LaTeX's (2.5em, then 2.2em when nested). */
+main ol,
+main ul {
+  padding-left: 2.5em;
+}
+
+main li ol,
+main li ul {
+  padding-left: 2.2em;
+}
+
+main li::marker {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Labels of ordered lists as written: (a), a) or a. Pandoc's HTML keeps only the
+   numbering, so module.lua wraps each list in a div with classes for the delimiter
+   (.list-parens, .list-paren, .list-period) and the numbering (.list-lower-alpha, ...).
+   The en space (\2002) matches the gap between label and text in the PDF. */
+.list-decimal     { --list-numbering: decimal; }
+.list-lower-alpha { --list-numbering: lower-alpha; }
+.list-upper-alpha { --list-numbering: upper-alpha; }
+.list-lower-roman { --list-numbering: lower-roman; }
+.list-upper-roman { --list-numbering: upper-roman; }
+
+.list-parens > ol > li::marker {
+  content: "(" counter(list-item, var(--list-numbering)) ")\2002";
+}
+
+.list-paren > ol > li::marker {
+  content: counter(list-item, var(--list-numbering)) ")\2002";
+}
+
+.list-period > ol > li::marker {
+  content: counter(list-item, var(--list-numbering)) ".\2002";
+}
+
 /* [2]{.marks}: right-aligned marks */
 .marks {
   float: right;

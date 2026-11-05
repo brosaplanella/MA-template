@@ -125,6 +125,30 @@ Sheet features (see the examples):
 | `{{< sheet deadline >}}` | a setting from `_module.yml` for this sheet |
 | `see {{< notes thm-FTC >}} of the lecture notes` | "see Theorem 2.1 of the lecture notes"; in HTML, a link to it in the notes on Moodle (see below) |
 
+### Parts of a question (lists)
+
+Write parts as `(a)`, `(b)`, ... (or `(i)`, `1.`, `-`); the label shows as written in both PDF
+and HTML. Everything after the first paragraph of a part (more paragraphs, displayed
+equations, code cells, nested lists) is indented by 4 spaces, so it lines up with the text
+after `(a) `:
+
+```
+(a) The integrating factor is $\mathrm{e}^{2t}$. [1]{.marks}
+
+    Integrating gives
+    $$
+    x(t) = \mathrm{e}^{-t} + C \, \mathrm{e}^{-2t}.
+    $$ [2]{.marks}
+
+    (i) A nested part, indented by 4 more spaces.
+
+(b) Next part.
+```
+
+Every paragraph of a part then lines up with its first line, with the label hanging to the
+left. A paragraph that is not indented ends the list: it goes back to the margin, and the
+render warns if it sits between two parts.
+
 ### References to the notes
 
 `{{< notes label >}}` takes any cross-reference label from the notes (`sec-…`, `thm-…`,

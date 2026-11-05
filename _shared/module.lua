@@ -3,6 +3,8 @@
 -- Everywhere:
 --  * injects the macros in _shared/macros.tex into both PDF and HTML output
 --  * makes ::: {.center} and ::: {.infobox} divs work in PDF too
+--  * lists: keeps (a) / a) labels in HTML (see style.css), and warns when an
+--    unindented paragraph splits a list in two
 --
 -- Sheets (problem sheets and assignments) only:
 --  * module code/title and term from _module.yml, for the headers
@@ -248,6 +250,57 @@ local function Div(el)
   end
 end
 
+-- Lists ------------------------------------------------------------------------
+
+-- Pandoc's HTML drops the delimiter of ordered lists: (a), a) and a. all become
+-- <ol type="a">. Keep delimiter and numbering as classes on a wrapper, for the
+-- labels in style.css (CSS cannot tell type="a" from type="A").
+local delimiter_class = { TwoParens = "list-parens", OneParen = "list-paren" }
+local style_class = {
+  LowerAlpha = "list-lower-alpha", UpperAlpha = "list-upper-alpha",
+  LowerRoman = "list-lower-roman", UpperRoman = "list-upper-roman",
+}
+
+local function OrderedList(el)
+  if not quarto.doc.is_format("html") then return nil end
+  local a = el.listAttributes
+  local classes = (delimiter_class[a.delimiter] or "list-period") .. " "
+    .. (style_class[a.style] or "list-decimal")
+  return pandoc.Div(el, { class = classes })
+end
+
+-- A paragraph between (a) and (b) that is not indented ends the list: it shows at
+-- the left margin and (b) starts a new list. Warn, since this is rarely intended.
+local function check_list_breaks(doc)
+  local file = quarto.doc.input_file and pandoc.path.filename(quarto.doc.input_file) or ""
+  local function check(blocks)
+    for i, blk in ipairs(blocks) do
+      if blk.t == "OrderedList" then
+        local a = blk.listAttributes
+        local next_start = a.start + #blk.content
+        for j = i + 1, #blocks do
+          local b = blocks[j]
+          if b.t == "Header" or b.t == "HorizontalRule" then break end
+          if b.t == "OrderedList" then
+            local c = b.listAttributes
+            if j > i + 1 and c.start == next_start and c.style == a.style
+                and c.delimiter == a.delimiter then
+              local text = pandoc.utils.stringify(blocks[i + 1])
+              if #text > 50 then text = text:sub(1, 50) .. "..." end
+              quarto.log.warning(file .. ": \"" .. text .. "\" is between two items of "
+                .. "a list but not indented, so it is outside the list. Indent it by "
+                .. "4 spaces to keep it in the item above.")
+            end
+            break
+          end
+        end
+      end
+    end
+  end
+  doc:walk({ Blocks = function(blocks) check(blocks) end })
+  return nil
+end
+
 local function HorizontalRule()
   if info and quarto.doc.is_format("latex") then
     return pandoc.RawBlock("latex", "\\medskip\\hrule\\bigskip")
@@ -333,7 +386,8 @@ return {
   { Pandoc = setup },
   { Pandoc = strip_marking },
   { Pandoc = check_totals },
+  { Pandoc = check_list_breaks },
   { Header = Header },  -- before Span, so heading totals get their own style
   { Span = Span, Div = Div, HorizontalRule = HorizontalRule,
-    Pandoc = Pandoc },
+    OrderedList = OrderedList, Pandoc = Pandoc },
 }
