@@ -1,6 +1,7 @@
 <!--
-Maths macros are defined once for the whole module in _shared/macros.tex and work in
-both the PDF and the HTML output, so chapters do not need to include anything.
+Maths macros are defined once for the whole module (_shared/macros-template.tex and
+_shared/macros.tex) and work in both the PDF and the HTML output, so chapters do not need
+to include anything.
 -->
 
 # A template chapter {#sec-ex}

@@ -102,7 +102,7 @@ staff file or the solutions of a sheet that is not released. You can run it on i
 ```
 _module.yml                 module code/title/term, deadlines, release flags
 _shared/                    shared by everything: macros, style, filter, header boxes
-  macros.tex                your maths macros (PDF and HTML)
+  macros.tex                your maths macros (PDF and HTML); the template's are in macros-template.tex
 notes/                      lecture notes (a Quarto book): add chapters in notes/_quarto.yml
 sheets/
   problem-sheets/<id>/<id>.qmd, <id>-solutions.qmd
@@ -202,7 +202,10 @@ The HTML shows maths with MathJax, which understands maths-mode LaTeX (including
 packages) but cannot load packages: `\usepackage` works in the PDF only. So:
 
 - **Notation:** define it in `_shared/macros.tex` with `\newcommand` instead of loading a
-  package (e.g. a `\dv` macro instead of the `physics` package). It works in PDF and HTML.
+  package. It works in PDF and HTML. The template already provides `\dd`, `\dv`, `\pdv`
+  (instead of the `physics` package) and bold vectors `\bfx`, `\bfE`, ..., `\bfzero` (see
+  `_shared/macros-template.tex`). To change one, define it again in `macros.tex`: your
+  version replaces the template's.
 - **Figures:** standalone `figs/*.tex` files are compiled by LaTeX on their own, so they can
   load any package (`tikz`, `pgfplots`, `siunitx`, ...).
 - **Layout** (boxes, marks, parts): use the features above, which look the same in both.

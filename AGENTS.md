@@ -16,7 +16,9 @@ _shared/
   template.lua     main filter: macros, marks, marking, difficulty, release control, banner, marker
   sheet.lua        {{< sheet key >}} and {{< notes label >}} shortcodes
   common.lua       config loading + sheet identification (used by both .lua files)
-  macros.tex       maths macros, injected into PDF and HTML
+  macros-template.tex  shipped maths macros (\dd, \dv, \pdv, \bfx...); template-owned
+  macros.tex       the module's maths macros; a name defined here replaces the template's.
+                   Both are injected into PDF and HTML by template.lua
   palette.yml      brand colours + roles (accent, alert); source for generated/
   generated/       palette.tex, theme-light.scss, theme-dark.scss (from scripts/palette.py);
                    notes-xref.json (from scripts/notes_xref.py); committed, do not edit
