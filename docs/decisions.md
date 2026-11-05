@@ -3,6 +3,22 @@
 Answers from the author to the questions in `audit-ma147.md`, plus the brief's open decisions.
 Newest first. Each entry: date, decision, and any consequence for the template.
 
+## 2026-11-05: template and module files (#10)
+
+- `_shared/module.lua` is renamed `_shared/template.lua`: it is template code, the same in
+  every module.
+- Module-owned: `_module.yml`, `_shared/macros.tex`, `_shared/palette.yml`,
+  `_shared/header-*.qmd`, notes content and `notes/_quarto.yml`, sheets and figures,
+  `pyproject.toml` (extra packages). Everything else in `_shared/`, `scripts/`,
+  `src/moduletools/` and `sheets/_quarto*.yml` is template-owned and starts with a
+  one-line marker. The list is in the README, for the copier wizard (#7) to follow.
+
+## 2026-11-05: lists (#5)
+
+- Parts are written `(a)`, `(i)`, ...; labels show as written in PDF and HTML, with a hanging
+  indent. Indentation alone decides: indented by 4 spaces = in the part; unindented = context
+  at the margin, and numbering continues. No warning and no extra markup.
+
 ## 2026-11-04: planning
 
 - The plan and to-do list live in the GitHub issues, grouped by milestone (with the dates from

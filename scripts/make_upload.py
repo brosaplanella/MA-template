@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Prepare the student build for Moodle, in _build/upload/:
 
 * <code>-notes.zip: the HTML notes (with the PDF). On Moodle: add a File resource,

@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Quarto post-render hook for the staff build of the sheets.
 
 Adds -STAFF to the name of every output file (assignment-1.pdf becomes

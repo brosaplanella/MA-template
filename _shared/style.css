@@ -1,3 +1,4 @@
+/* Template file: do not edit it in a module (see "Template and module files" in README.md). */
 /* HTML styling shared by the notes and the sheets. Colours come from the
    --accent and --brand-* variables in generated/theme-*.scss (from palette.yml). */
 .center {
@@ -40,7 +41,7 @@ main li::marker {
 }
 
 /* Labels of ordered lists as written: (a), a) or a. Pandoc's HTML keeps only the
-   numbering, so module.lua wraps each list in a div with classes for the delimiter
+   numbering, so template.lua wraps each list in a div with classes for the delimiter
    (.list-parens, .list-paren, .list-period) and the numbering (.list-lower-alpha, ...).
    The en space (\2002) matches the gap between label and text in the PDF. */
 .list-decimal     { --list-numbering: decimal; }

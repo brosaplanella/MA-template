@@ -196,6 +196,19 @@ the `.pdf` while the HTML uses the `.svg`:
 
 Figures can use the palette colours after `\input{palette.tex}`.
 
+### Maths and LaTeX packages
+
+The HTML shows maths with MathJax, which understands maths-mode LaTeX (including the AMS
+packages) but cannot load packages: `\usepackage` works in the PDF only. So:
+
+- **Notation:** define it in `_shared/macros.tex` with `\newcommand` instead of loading a
+  package (e.g. a `\dv` macro instead of the `physics` package). It works in PDF and HTML.
+- **Figures:** standalone `figs/*.tex` files are compiled by LaTeX on their own, so they can
+  load any package (`tikz`, `pgfplots`, `siunitx`, ...).
+- **Layout** (boxes, marks, parts): use the features above, which look the same in both.
+
+If you need a package that none of these covers, open an issue on the template repository.
+
 ### Colours
 
 All colours are defined once in [`_shared/palette.yml`](_shared/palette.yml) (Warwick brand
@@ -213,6 +226,25 @@ Do not put release flags there: the committed `_module.yml` is the record of wha
 
 Put old versions you want at hand while rewriting (old LaTeX sheets, etc.) in `_scratch/`.
 It is ignored by git and by Quarto, and it is **not backed up**: delete it when you are done.
+
+## Template and module files
+
+Some files belong to the template and work the same in every module; others are yours to edit.
+Keeping to this split means template updates can be applied to your module without
+overwriting your work.
+
+**Yours (edit freely):**
+
+- `_module.yml`: module code, title, term, deadlines, release flags
+- `_shared/macros.tex`, `_shared/palette.yml`, `_shared/header-*.qmd`
+- the notes chapters and `notes/_quarto.yml` (title, chapter list), and `notes/refs.bib`
+- the sheets in `sheets/problem-sheets/` and `sheets/assignments/`, and all `figs/`
+- `pyproject.toml`: add the Python packages your code cells need (then `uv sync`)
+
+**Template (do not edit in a module):** everything else in `_shared/`, `scripts/` and
+`src/moduletools/`, and `sheets/_quarto*.yml`. Each of these files starts with a line saying
+so. `_shared/generated/` is made by the scripts: never edit it by hand. If a template file
+does not do what you need, open an issue on the template repository instead.
 
 ## Credits
 

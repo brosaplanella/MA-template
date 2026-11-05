@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Figure helpers shared by the notes and the sheets.
 
 In any code cell:

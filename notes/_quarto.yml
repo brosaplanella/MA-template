@@ -33,7 +33,7 @@ bibliography: refs.bib
 csl: american-mathematical-society-numeric.csl
 
 filters:
-  - ../_shared/module.lua
+  - ../_shared/template.lua
 
 format:
   html:

@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Module settings and sheet layout, shared by the build scripts.
 
 Reads _module.yml, then _local.yml on top (if present). Mirrors the rules in
@@ -35,7 +36,7 @@ except ImportError:  # pragma: no cover - depends on the environment
 KINDS = ("problem-sheets", "assignments")
 BUILD = ROOT / "_build"
 
-# Written by module.lua into every sheet: <meta name="ma-template"> in HTML,
+# Written by template.lua into every sheet: <meta name="ma-template"> in HTML,
 # a MATemplate entry in the PDF info.
 MARKER_RE = re.compile(
     rb"ma-template-doc kind=([\w-]+) id=([\w.-]+) role=(\w+) build=(\w+)"

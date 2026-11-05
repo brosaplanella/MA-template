@@ -1,6 +1,7 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Quarto post-render hook for the student build of the sheets.
 
-1. Delete the placeholders that module.lua renders instead of unreleased solutions.
+1. Delete the placeholders that template.lua renders instead of unreleased solutions.
 2. Run the leak check on the whole student build; fail the render if it finds anything.
 """
 
