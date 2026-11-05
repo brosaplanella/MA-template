@@ -88,6 +88,8 @@ The sheets are LaTeX articles with a shared preamble:
 
 ## 5. Questions for the author
 
+*Answered on 2026-11-05: see `decisions.md` and issues #25 to #28.*
+
 1. **Convert the sheets by hand or with a script?** Pandoc reads LaTeX and can do most of it
    (keeping the macros unexpanded); a short script would then turn top-level items into
    headings and `\easy` etc. into difficulty spans, leaving a review pass. If colleagues also
