@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 # Problem sheets and assignments. Build from the repository root with
 #   uv run scripts/build.py           (student build)
 #   uv run scripts/build.py staff     (staff build: everything, marked -STAFF)
@@ -22,7 +23,7 @@ profile:
   default: student
 
 filters:
-  - ../_shared/module.lua
+  - ../_shared/template.lua
 shortcodes:
   - ../_shared/sheet.lua
 

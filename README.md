@@ -214,6 +214,25 @@ Do not put release flags there: the committed `_module.yml` is the record of wha
 Put old versions you want at hand while rewriting (old LaTeX sheets, etc.) in `_scratch/`.
 It is ignored by git and by Quarto, and it is **not backed up**: delete it when you are done.
 
+## Template and module files
+
+Some files belong to the template and work the same in every module; others are yours to edit.
+Keeping to this split means template updates can be applied to your module without
+overwriting your work.
+
+**Yours (edit freely):**
+
+- `_module.yml`: module code, title, term, deadlines, release flags
+- `_shared/macros.tex`, `_shared/palette.yml`, `_shared/header-*.qmd`
+- the notes chapters and `notes/_quarto.yml` (title, chapter list), and `notes/refs.bib`
+- the sheets in `sheets/problem-sheets/` and `sheets/assignments/`, and all `figs/`
+- `pyproject.toml`: add the Python packages your code cells need (then `uv sync`)
+
+**Template (do not edit in a module):** everything else in `_shared/`, `scripts/` and
+`src/moduletools/`, and `sheets/_quarto*.yml`. Each of these files starts with a line saying
+so. `_shared/generated/` is made by the scripts: never edit it by hand. If a template file
+does not do what you need, open an issue on the template repository instead.
+
 ## Credits
 
 The placeholder lecture notes are *Quarto Lecture Notes* by Thomas Hudson (MIT licence,

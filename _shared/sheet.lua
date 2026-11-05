@@ -1,3 +1,4 @@
+-- Template file: do not edit it in a module (see "Template and module files" in README.md).
 -- Shortcode {{< sheet key >}}: a setting for the current sheet from _module.yml.
 -- It looks in the sheet's own entry first, then in the kind's `defaults`:
 --

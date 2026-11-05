@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Build TikZ (or any standalone LaTeX) figures to PDF (for the PDF) and SVG (for the HTML).
 
     uv run scripts/tikz.py            build figures whose .tex changed

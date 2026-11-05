@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 # Staff build: all sheets and solutions, with marking notes, a "staff copy" banner
 # and a -STAFF suffix on every file. Never upload anything from _build/staff.
 project:

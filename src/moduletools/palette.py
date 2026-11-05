@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """The module colours from _shared/palette.yml, for use in figures.
 
     colours["purple"]       "#440379"

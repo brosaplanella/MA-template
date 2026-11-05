@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Write the map of cross-reference labels in the notes, for {{< notes label >}} in sheets.
 
 Runs after every render of the notes (post-render hook in notes/_quarto.yml), or by hand:

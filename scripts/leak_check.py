@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Check that a student build contains nothing staff-only.
 
     uv run scripts/leak_check.py [folder]     (default: _build/student)
@@ -48,7 +49,7 @@ def _pdf_literal(raw: bytes) -> bytes:
 
 
 def _pdf_text(data: bytes) -> bytes:
-    """The PDF info entries written by module.lua, decoded to UTF-8."""
+    """The PDF info entries written by template.lua, decoded to UTF-8."""
     texts = []
     for literal, hexstr in PDF_INFO_RE.findall(data):
         raw = _pdf_literal(literal) if literal else bytes.fromhex(hexstr.decode())

@@ -13,7 +13,7 @@ PDF and HTML, sharing one style layer. Assignment solutions are the only sensiti
 _module.yml        module settings, deadlines, release flags (committed)
 _local.yml         per-machine overrides (gitignored, optional)
 _shared/
-  module.lua       main filter: macros, marks, marking, difficulty, release control, banner, marker
+  template.lua     main filter: macros, marks, marking, difficulty, release control, banner, marker
   sheet.lua        {{< sheet key >}} and {{< notes label >}} shortcodes
   common.lua       config loading + sheet identification (used by both .lua files)
   macros.tex       maths macros, injected into PDF and HTML
@@ -44,6 +44,11 @@ docs/              development notes for the template (brief, audit, decisions)
 reference/         read-only reference modules (gitignored); never modify
 ```
 
+Template-owned files start with a "Template file: do not edit it in a module" line; the list
+of module-owned files is in README.md ("Template and module files"). Changes to template
+behaviour go in template-owned files, never in module-owned ones (and vice versa: no module
+content in template files). Mark any new template file the same way.
+
 ## Commands
 
 ```
@@ -65,7 +70,7 @@ QUARTO_PYTHON to the project environment. Images are referenced without extensio
 ## How release control works
 
 - A sheet is identified by its path: `sheets/<kind>/<id>/<id>[-solutions].qmd`.
-- `module.lua` in a student build (any profile other than `staff`) replaces the content of
+- `template.lua` in a student build (any profile other than `staff`) replaces the content of
   unreleased solutions with a placeholder; `post_render_student.py` deletes the placeholder,
   then runs the leak check and fails the render on any problem.
 - Every sheet carries a marker (`ma-template-doc kind=… id=… role=… build=…`) in an HTML
@@ -75,7 +80,7 @@ QUARTO_PYTHON to the project environment. Images are referenced without extensio
 
 ## Hard rules
 
-1. Never weaken the leak check, the withholding in `module.lua`, or the student default profile
+1. Never weaken the leak check, the withholding in `template.lua`, or the student default profile
    without the author's explicit approval.
 2. Never commit build outputs (`_build/`), `_local.yml`, or anything from `_scratch/`.
 3. Never read, list or search outside this repository. Exam material lives elsewhere and must

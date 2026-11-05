@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Consistent figure style for the notes and the sheets."""
 
 from __future__ import annotations

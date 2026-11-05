@@ -1,3 +1,4 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
 """Generate the colour files from _shared/palette.yml.
 
     uv run scripts/palette.py

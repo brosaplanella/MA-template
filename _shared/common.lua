@@ -1,4 +1,5 @@
--- Helpers shared by module.lua (filter) and sheet.lua (shortcode):
+-- Template file: do not edit it in a module (see "Template and module files" in README.md).
+-- Helpers shared by template.lua (filter) and sheet.lua (shortcode):
 --  * read the module settings: _module.yml, then _local.yml on top (if present)
 --  * work out which sheet is being rendered from its path:
 --      sheets/<kind>/<id>/<id>.qmd            questions

@@ -1,4 +1,5 @@
--- Module filter, used by the notes and the sheets.
+-- Template file: do not edit it in a module (see "Template and module files" in README.md).
+-- Template filter, used by the notes and the sheets.
 --
 -- Everywhere:
 --  * injects the macros in _shared/macros.tex into both PDF and HTML output
