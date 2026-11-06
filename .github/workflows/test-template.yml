@@ -41,7 +41,9 @@ jobs:
 
       - name: LaTeX packages for TikZ figures
         # scripts/tikz.py calls pdflatex directly, so Quarto's automatic installs do not apply
-        run: tlmgr install standalone pgf dvisvgm
+        run: |
+          tlmgr update --self
+          tlmgr install standalone pgf dvisvgm
 
       - name: Ghostscript (dvisvgm reads PDFs through it)
         run: |
