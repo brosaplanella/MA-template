@@ -46,7 +46,7 @@ The setup wizard filled in the module code, title, term and lecturer, and create
 and sheets. Then, once:
 
 1. **Build**: `uv sync`, then `uv run scripts/build.py`. It should end with "Leak check passed".
-2. **GitHub**: create a **private** repository (empty: no README or licence), then
+2. [Optional, but recommended to back the module up] **GitHub**: create a **private** repository (empty: no README or licence), then
    ```
    git init -b main
    git add -A
