@@ -1,0 +1,14 @@
+# Dependabot: opens a pull request when a GitHub Action used in .github/workflows/ has a
+# newer version (this keeps the "deprecated version" warnings away). Review and merge as
+# usual; the template test runs on pull requests that touch its workflow.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:            # one pull request for all action updates, not one each
+        patterns: ["*"]
+    commit-message:
+      prefix: "CI"
