@@ -5,8 +5,8 @@
 """Test the copier template: generate modules from the working copy and build them.
 
 Sets: defaults (generate only), small (2 + 1 sheets, with a TikZ figure and a code cell
-added; both builds; a planted leak must make the leak check fail), no-assignments
-(student build). Also run on Ubuntu and macOS by .github/workflows/test-template.yml.
+added and a LaTeX sheet imported with scripts/import_latex.py; both builds; a planted leak
+must make the leak check fail), no-assignments (student build). Also run on Ubuntu and macOS by .github/workflows/test-template.yml.
 
     uv run scripts/test_template.py            all answer sets
     uv run scripts/test_template.py small      one set (defaults, small, no-assignments)
@@ -58,6 +58,48 @@ ax.plot([0, 1], [0, 1])
 plt.show()
 ```
 """
+
+
+LATEX_SHEET = r"""\documentclass{article}
+\newcommand{\R}{\mathbb{R}}
+\begin{document}
+\maketitle
+\begin{enumerate}
+  \item Solve $\dv{y}{x} = y$ for $x \in \R$.
+  \begin{enumerate}
+    \item A first part, with
+    \begin{align*}
+      y &= e^{x}, \\
+      \bfx &= \bfzero.
+    \end{align*}
+    \item A second part.
+  \end{enumerate}
+  \item Another question.
+\end{enumerate}
+\end{document}
+"""
+
+
+def import_latex_sheet(dest: Path) -> list[str]:
+    """Import LATEX_SHEET over problem sheet 2 (scripts/import_latex.py) and check the result."""
+    source = dest / "_scratch" / "old-sheet.tex"
+    source.parent.mkdir(exist_ok=True)
+    source.write_text(LATEX_SHEET, encoding="utf-8")
+    qmd = dest / "sheets" / "problem-sheets" / "problem-sheet-2" / "problem-sheet-2.qmd"
+    run(["uv", "run", "scripts/import_latex.py", "sheet", str(source),
+         qmd.relative_to(dest).as_posix(), "--force"], dest)
+    text = qmd.read_text(encoding="utf-8")
+    macros = dest / "_scratch" / "imported-macros.tex"
+    expected = ["## Question 1", "## Question 2", "(a) A first part", "(b) A second part",
+                "\\begin{aligned}"]
+    problems = [f"import_latex: '{e}' missing" for e in expected if e not in text]
+    if "{=latex}" in text:
+        problems.append("import_latex: raw LaTeX left in the output")
+    if not macros.exists() or "\\R}" not in macros.read_text(encoding="utf-8"):
+        problems.append("import_latex: \\R not collected in _scratch/imported-macros.tex")
+    if "\\R" in text:  # \R is not in macros.tex, so the build would fail: use the template's
+        qmd.write_text(text.replace("\\R", "\\mathbb{R}"), encoding="utf-8")
+    return problems
 
 
 def run(cmd: list[str], cwd: Path, expect_failure: bool = False) -> None:
@@ -137,6 +179,8 @@ def test(name: str) -> list[str]:
         add_extras(dest)
     if builds:
         run(["uv", "sync"], dest)
+        if name == "small":
+            problems += import_latex_sheet(dest)
         for profile in builds:
             run(["uv", "run", "scripts/build.py", profile], dest)  # includes the leak check
     if name == "small":

@@ -43,6 +43,8 @@ scripts/
   tikz.py          figs/*.tex -> .pdf + .svg when changed (pre-render hook of both projects)
   notes_xref.py    notes/.quarto/xref (Quarto internal) -> label map for {{< notes >}}
                    (post-render hook of the notes)
+  import_latex.py  LaTeX sheet -> .qmd (Pandoc + a Lua filter inside the script); leaves
+                   unknown LaTeX raw and reports it; never fails on unknown input
 ```
 
 Template-owned files start with a "Template file: do not edit it in a module" line; the list
