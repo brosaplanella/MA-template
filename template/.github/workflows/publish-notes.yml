@@ -1,0 +1,83 @@
+# Template file: do not edit it in a module (see "Template and module files" in README.md).
+# Publish the lecture notes (student build, notes only) on GitHub Pages. OFF unless the
+# repository variable PUBLISH_NOTES is set to true (Settings > Secrets and variables >
+# Actions > Variables); see "Publishing the notes on a website" in README.md.
+# The site is public, even if the repository is private. Only _build/student/notes is
+# uploaded, and only after the leak check and scripts/pages_check.py (no sheets at all).
+name: Publish notes
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ["sheets/**"]   # sheets never reach the notes site
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: vars.PUBLISH_NOTES == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      GH_TOKEN: ${{ github.token }}   # Quarto downloads TinyTeX from GitHub (rate limits)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      # TinyTeX with the LaTeX packages the last successful run installed is cached;
+      # editing this file starts a fresh cache.
+      - name: Cached TinyTeX
+        id: tinytex
+        uses: actions/cache@v4
+        with:
+          path: ~/.TinyTeX
+          key: tinytex-${{ runner.os }}-${{ hashFiles('.github/workflows/publish-notes.yml') }}
+
+      - name: Install TinyTeX (no cache)
+        if: steps.tinytex.outputs.cache-hit != 'true'
+        run: quarto install tinytex --no-prompt
+
+      - name: TinyTeX on the PATH (tikz.py calls pdflatex directly)
+        run: |
+          tlmgr=$(find "$HOME/.TinyTeX" -name tlmgr -path "*/bin/*" | head -n 1)
+          dirname "$tlmgr" >> "$GITHUB_PATH"
+
+      - name: LaTeX packages for TikZ figures (no cache)
+        if: steps.tinytex.outputs.cache-hit != 'true'
+        run: |
+          tlmgr update --self
+          tlmgr install standalone pgf dvisvgm
+
+      - name: MuPDF tools (dvisvgm reads the figures' PDFs with mutool)
+        run: sudo apt-get update && sudo apt-get install -y mupdf-tools
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Build the student notes (with the leak check)
+        run: uv run scripts/build.py student --only notes
+
+      - name: Check that only the notes will be published
+        run: uv run scripts/pages_check.py _build/student/notes
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _build/student/notes
+
+      - name: Publish
+        id: deploy
+        uses: actions/deploy-pages@v4

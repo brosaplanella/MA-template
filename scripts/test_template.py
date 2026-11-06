@@ -6,7 +6,7 @@
 
 Sets: defaults (generate only), small (2 + 1 sheets, with a TikZ figure and a code cell
 added and a LaTeX sheet imported with scripts/import_latex.py; both builds; a planted leak
-must make the leak check fail), no-assignments (student build). Also run on Ubuntu and macOS by .github/workflows/test-template.yml.
+must make the leak check fail, and a sheet among the notes the pages check), no-assignments (student build). Also run on Ubuntu and macOS by .github/workflows/test-template.yml.
 
     uv run scripts/test_template.py            all answer sets
     uv run scripts/test_template.py small      one set (defaults, small, no-assignments)
@@ -140,6 +140,18 @@ def check_leak_detected(dest: Path) -> None:
     run(["uv", "run", "scripts/leak_check.py"], dest)
 
 
+def check_pages(dest: Path) -> None:
+    """The pages check passes on the student notes, and fails on them with a released sheet."""
+    notes = dest / "_build" / "student" / "notes"
+    run(["uv", "run", "scripts/pages_check.py", "_build/student/notes"], dest)
+    run(["uv", "run", "scripts/pages_check.py", "_build/student"], dest, expect_failure=True)
+    sheet = dest / "_build" / "student" / "sheets" / "problem-sheets" / "problem-sheet-1"
+    copy = notes / "sheet.html"   # a released sheet, renamed: only its marker gives it away
+    shutil.copy(sheet / "problem-sheet-1.html", copy)
+    run(["uv", "run", "scripts/pages_check.py", "_build/student/notes"], dest, expect_failure=True)
+    copy.unlink()
+
+
 def check_layout(dest: Path, answers: dict) -> list[str]:
     """Problems with the generated files: sheet folders and _module.yml entries."""
     problems = []
@@ -186,6 +198,7 @@ def test(name: str) -> list[str]:
     if name == "small":
         problems += check_extras(dest)
         check_leak_detected(dest)
+        check_pages(dest)
     return problems
 
 

@@ -101,6 +101,23 @@ Unreleased solutions show only a placeholder unless you add `--profile staff`. K
   the notes) for every new upload, so students can see what changed.
 - **Sheets**: upload the files in `_build/upload/sheets/` (each HTML file is self-contained).
 
+### Publishing the notes on a website (optional)
+
+Moodle is the usual place. If you also want the notes on a public website (GitHub Pages),
+the repository has a workflow for it, **off by default**. It publishes the student build of
+the **notes only**: it builds them on GitHub, runs the leak check, and refuses to publish if
+the folder holds any sheet or solutions file at all. To turn it on, on GitHub:
+
+1. *Settings → Pages*: set *Source* to **GitHub Actions**.
+2. *Settings → Secrets and variables → Actions → Variables*: add `PUBLISH_NOTES` = `true`.
+3. *Actions → Publish notes → Run workflow*. From then on it also runs on every push to
+   `main` that changes anything outside `sheets/`.
+
+The site is at `https://<you>.github.io/<repository>/`; put it in `notes: url:` in
+`_module.yml`. **The site is public even though the repository is private**, and Pages on a
+private repository needs a paid GitHub plan. To stop publishing, delete the variable and
+unpublish the site in *Settings → Pages*.
+
 ## Releasing solutions
 
 Every sheet has an entry in [`_module.yml`](_module.yml):
@@ -317,7 +334,7 @@ overwriting your work.
 - `pyproject.toml`: add the Python packages your code cells need (then `uv sync`)
 
 **Template (do not edit in a module):** everything else in `_shared/`, `scripts/` and
-`src/moduletools/`, and `sheets/_quarto*.yml`. Each of these files starts with a line saying
+`src/moduletools/`, `sheets/_quarto*.yml` and `.github/workflows/`. Each of these files starts with a line saying
 so. `_shared/generated/` is made by the scripts: never edit it by hand. If a template file
 does not do what you need, open an issue on the template repository instead.
 

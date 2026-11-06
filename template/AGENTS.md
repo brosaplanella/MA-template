@@ -45,6 +45,10 @@ scripts/
                    (post-render hook of the notes)
   import_latex.py  LaTeX sheet -> .qmd (Pandoc + a Lua filter inside the script); leaves
                    unknown LaTeX raw and reports it; never fails on unknown input
+  pages_check.py   stricter check before publishing the notes: notes only, no sheet at all
+.github/workflows/
+  private-guard.yml  fails if the repository is ever public
+  publish-notes.yml  notes -> GitHub Pages; off unless the PUBLISH_NOTES variable is true
 ```
 
 Template-owned files start with a "Template file: do not edit it in a module" line; the list
