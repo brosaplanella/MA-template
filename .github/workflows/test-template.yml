@@ -21,6 +21,8 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}   # Quarto downloads TinyTeX from GitHub (rate limits)
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,6 +32,12 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
         with:
           tinytex: true
+
+      - name: TinyTeX on the PATH (Quarto finds it, but tikz.py calls pdflatex directly)
+        run: |
+          tlmgr=$(find "$HOME/.TinyTeX" "$HOME/Library/TinyTeX" -name tlmgr -path "*/bin/*" 2>/dev/null | head -n 1)
+          echo "TinyTeX binaries: $(dirname "$tlmgr")"
+          dirname "$tlmgr" >> "$GITHUB_PATH"
 
       - name: LaTeX packages for TikZ figures
         # scripts/tikz.py calls pdflatex directly, so Quarto's automatic installs do not apply
