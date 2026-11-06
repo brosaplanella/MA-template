@@ -40,6 +40,31 @@ OneDrive/.../MA302/
 C:/dev/MA302/   this repository (notes, problem sheets, assignments)
 ```
 
+## Setting up a new module
+
+The setup wizard filled in the module code, title, term and lecturer, and created stub notes
+and sheets. Then, once:
+
+1. **Build**: `uv sync`, then `uv run scripts/build.py`. It should end with "Leak check passed".
+2. **GitHub**: create a **private** repository (empty: no README or licence), then
+   ```
+   git init -b main
+   git add -A
+   git commit -m "Create the module from the template"
+   git remote add origin git@github.com:<you>/<repository>.git
+   git push -u origin main
+   ```
+   From then on, a GitHub check fails loudly if the repository is ever made public.
+3. **`_module.yml`**: set each assignment's `deadline` (they start as `TBC`), and check the
+   submission and instructions text under `assignments: defaults:`. Optional: your own
+   `difficulty-icon` instead of stars, and `solutions-released: true` under
+   `problem-sheets: defaults:` if you publish solutions together with the sheets.
+4. **Header boxes**: adapt the wording in `_shared/header-*.qmd` if needed.
+5. **Write**: the preface in `notes/index.qmd`, chapters in `notes/` (listed in
+   `notes/_quarto.yml`), sheets in `sheets/` (see "Writing" to add or remove one).
+6. **First Moodle upload** (see "Uploading to Moodle"), then copy the address of the notes
+   into `notes: url:` in `_module.yml`, so that the HTML sheets link to them.
+
 ## Build
 
 From the repository folder:
