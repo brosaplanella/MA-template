@@ -18,8 +18,8 @@ repository but never reach students by accident. This repository was created fro
 
 Then, once, in the repository folder: `uv sync`. This installs everything the build and the
 code cells need (numpy, matplotlib, Jupyter, ...) into a project environment (`.venv/`).
-On macOS/Linux, TikZ figures also need Ghostscript (`brew install ghostscript`, or your
-package manager); TeX Live on Windows includes it.
+On macOS/Linux, TikZ figures also need MuPDF's tools (`brew install mupdf-tools`, or
+`sudo apt install mupdf-tools`) to turn them into SVG; TeX Live on Windows needs nothing extra.
 
 Everything works on Windows, macOS and Linux.
 

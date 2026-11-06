@@ -1,0 +1,78 @@
+# Generate modules from the template and build them on Linux and macOS
+# (scripts/test_template.py: three answer sets, both builds, leak check, a planted leak).
+# Windows is tested locally by the maintainers. Runs on pull requests that touch the
+# template, and by hand (Actions > Test template > Run workflow).
+name: Test template
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "template/**"
+      - "copier.yml"
+      - "scripts/test_template.py"
+      - ".github/workflows/test-template.yml"
+
+# A new push to the same branch cancels the run still in progress
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}   # Quarto downloads TinyTeX from GitHub (rate limits)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # copier copies from the git repository
+
+      - name: Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      # TinyTeX with every LaTeX package the last successful run installed (including the
+      # ones Quarto adds while rendering) is cached; editing this file starts a fresh cache.
+      - name: Cached TinyTeX
+        id: tinytex
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.TinyTeX
+            ~/Library/TinyTeX
+          key: tinytex-${{ runner.os }}-${{ hashFiles('.github/workflows/test-template.yml') }}
+
+      - name: Install TinyTeX (no cache)
+        if: steps.tinytex.outputs.cache-hit != 'true'
+        run: quarto install tinytex --no-prompt
+
+      - name: TinyTeX on the PATH (Quarto finds it, but tikz.py calls pdflatex directly)
+        run: |
+          tlmgr=$(find "$HOME/.TinyTeX" "$HOME/Library/TinyTeX" -name tlmgr -path "*/bin/*" 2>/dev/null | head -n 1)
+          echo "TinyTeX binaries: $(dirname "$tlmgr")"
+          dirname "$tlmgr" >> "$GITHUB_PATH"
+
+      - name: LaTeX packages for TikZ figures (no cache)
+        # scripts/tikz.py calls pdflatex directly, so Quarto's automatic installs do not apply
+        if: steps.tinytex.outputs.cache-hit != 'true'
+        run: |
+          tlmgr update --self
+          tlmgr install standalone pgf dvisvgm
+
+      - name: MuPDF tools (dvisvgm reads the figures' PDFs with mutool)
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            brew install mupdf-tools
+          else
+            sudo apt-get update && sudo apt-get install -y mupdf-tools
+          fi
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Test the template
+        run: uv run scripts/test_template.py
