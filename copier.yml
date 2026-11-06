@@ -41,8 +41,8 @@ _message_after_copy: |
     uv sync
     uv run scripts/build.py
 
-  Then create a PRIVATE GitHub repository for it (it will hold solutions) and push.
-  See README.md for writing notes and sheets.
+  Then follow "Setting up a new module" in README.md: a PRIVATE GitHub repository
+  (it will hold solutions), assignment deadlines, and the first Moodle upload.
 
 module_code:
   type: str

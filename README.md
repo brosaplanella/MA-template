@@ -16,8 +16,10 @@ uvx copier copy gh:brosaplanella/MA-template MA302
 
 It asks six questions: module code, title, term, lecturer, and how many problem sheets
 (default 10) and assignments (default 4). The new folder is a complete module with stub
-notes and sheets; its `README.md` explains how to build, write and release solutions.
-Create a **private** GitHub repository for it: it will hold solutions.
+notes and sheets. Its `README.md` starts with a short checklist ("Setting up a new module":
+private GitHub repository, deadlines, first Moodle upload), then explains how to build, write
+and release solutions. For a worked example, see the
+[Warwick Quarto Manual](https://github.com/brosaplanella/warwick-quarto-manual).
 
 A module gets template fixes and features later with `uvx copier update --defaults` (see the
 module README, "Template updates").
