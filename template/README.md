@@ -276,6 +276,31 @@ Do not put release flags there: the committed `_module.yml` is the record of wha
 Put old versions you want at hand while rewriting (old LaTeX sheets, etc.) in `_scratch/`.
 It is ignored by git and by Quarto, and it is **not backed up**: delete it when you are done.
 
+### Importing LaTeX sheets
+
+To start from an existing LaTeX problem sheet or assignment, import it file by file
+(questions and solutions separately):
+
+```
+uv run scripts/import_latex.py sheet _scratch/old/ps3.tex sheets/problem-sheets/problem-sheet-3/problem-sheet-3.qmd
+uv run scripts/import_latex.py sheet _scratch/old/ps3-sol.tex sheets/problem-sheets/problem-sheet-3/problem-sheet-3-solutions.qmd --force
+```
+
+The first level of `enumerate` becomes `## Question N`, the next `(a)`, `(b)`, ... and the next
+`(i)`, `(ii)`, ...; maths is kept as written; labelled figures become Quarto figures (with
+`\ref` turned into `@fig-...`) and are copied into `figs/`; page layout commands are dropped.
+Then review:
+
+1. **The report** at the end lists any LaTeX it could not convert (for example a command of
+   your own such as `\easy`), with line numbers in the new file. It stays in the file as
+   `` `\easy`{=latex} ``: replace it (e.g. by `[1]{.difficulty}`) or delete it.
+2. **Macros** the sheet uses are collected in `_scratch/imported-macros.tex`: copy the ones you
+   need into `_shared/macros.tex` (the template's own, like `\dd` or `\bfx`, are left out).
+3. **Read the sheet and build it**: titles, notes such as "see the lecture notes", and anything
+   laid out by hand (title blocks, spacing) need a human eye.
+
+`--force` replaces an existing file (such as the stub the wizard created).
+
 ## Template and module files
 
 Some files belong to the template and work the same in every module; others are yours to edit.
