@@ -1,0 +1,49 @@
+# Generate modules from the template and build them on Linux and macOS
+# (scripts/test_template.py: three answer sets, both builds, leak check, a planted leak).
+# Windows is tested locally by the maintainers. Runs on pull requests that touch the
+# template, and by hand (Actions > Test template > Run workflow).
+name: Test template
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "template/**"
+      - "copier.yml"
+      - "scripts/test_template.py"
+      - ".github/workflows/test-template.yml"
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # copier copies from the git repository
+
+      - name: Quarto and TinyTeX
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: LaTeX packages for TikZ figures
+        # scripts/tikz.py calls pdflatex directly, so Quarto's automatic installs do not apply
+        run: tlmgr install standalone pgf dvisvgm
+
+      - name: Ghostscript (dvisvgm reads PDFs through it)
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            brew install ghostscript
+          else
+            sudo apt-get update && sudo apt-get install -y ghostscript
+          fi
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Test the template
+        run: uv run scripts/test_template.py

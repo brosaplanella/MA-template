@@ -56,6 +56,9 @@ changes to the template are included.
   module-owned files are listed under `_skip_if_exists` in `copier.yml`, so `copier update`
   never touches them. Keep that list and the module README ("Template and module files")
   in step.
+- **On GitHub**, the same test runs on Ubuntu and macOS for every pull request that touches
+  the template (and by hand: Actions > Test template > Run workflow). Windows is tested
+  locally.
 - **Releases** are git tags (`v0.1.0`, `v0.1.1`, ...); `copier update` moves a module to the
   latest one. Tag only after `test_template.py` passes.
 
