@@ -293,30 +293,49 @@ Do not put release flags there: the committed `_module.yml` is the record of wha
 Put old versions you want at hand while rewriting (old LaTeX sheets, etc.) in `_scratch/`.
 It is ignored by git and by Quarto, and it is **not backed up**: delete it when you are done.
 
-### Importing LaTeX sheets
+### Importing LaTeX (sheets and notes)
 
-To start from an existing LaTeX problem sheet or assignment, import it file by file
-(questions and solutions separately):
+To start from existing LaTeX, import a problem sheet or assignment file by file (questions
+and solutions separately), or a whole set of lecture notes from its main file:
 
 ```
 uv run scripts/import_latex.py sheet _scratch/old/ps3.tex sheets/problem-sheets/problem-sheet-3/problem-sheet-3.qmd
 uv run scripts/import_latex.py sheet _scratch/old/ps3-sol.tex sheets/problem-sheets/problem-sheet-3/problem-sheet-3-solutions.qmd --force
+uv run scripts/import_latex.py notes _scratch/old-notes/main.tex --force
 ```
 
-The first level of `enumerate` becomes `## Question N`, the next `(a)`, `(b)`, ... and the next
-`(i)`, `(ii)`, ...; maths is kept as written; labelled figures become Quarto figures (with
-`\ref` turned into `@fig-...`) and are copied into `figs/`; page layout commands are dropped.
+**Sheets**: the first level of `enumerate` becomes `## Question N`, the next `(a)`, `(b)`, ...
+and the next `(i)`, `(ii)`, ... **Notes**: one `notes/chapterN.qmd` per `\chapter` (per
+`\section` for article-class notes), following `\input` and `\include`; the text before the
+first chapter goes to `_scratch/imported-preface.md`. In both:
+
+- maths is kept as written; `align`, `gather`, ... become their Quarto forms
+- theorem-like environments (theorem, lemma, corollary, proposition, conjecture, definition,
+  example, exercise, remark, solution, also under your own `\newtheorem` names) become
+  Quarto's numbered blocks; `proof` becomes `::: {.proof}`; other `\newtheorem`
+  environments become a plain block with a bold title
+- `\label` and `\ref`/`\eqref`/`\cref` become cross-references (`@eq-...`, `@thm-...`,
+  `@sec-...`, `@fig-...`, `@tbl-...`); `\cite` stays a citation
+- figures are copied into `figs/` (a PDF figure also gets an `.svg` for the HTML)
+- `\ifdefined\x ... \else ... \fi` keeps what LaTeX would typeset; page layout commands and
+  boxes (`mdframed`, ...) are dropped, keeping their content
+
 Then review:
 
-1. **The report** at the end lists any LaTeX it could not convert (for example a command of
-   your own such as `\easy`), with line numbers in the new file. It stays in the file as
-   `` `\easy`{=latex} ``: replace it (e.g. by `[1]{.difficulty}`) or delete it.
-2. **Macros** the sheet uses are collected in `_scratch/imported-macros.tex`: copy the ones you
-   need into `_shared/macros.tex` (the template's own, like `\dd` or `\bfx`, are left out).
-3. **Read the sheet and build it**: titles, notes such as "see the lecture notes", and anything
-   laid out by hand (title blocks, spacing) need a human eye.
+1. **The report** at the end lists what it could not convert, with line numbers in the new
+   files: your own text commands (such as `\easy`), unresolved references, packages whose
+   commands are not available (such as `physics`), and a `thebibliography` list. Unconverted
+   LaTeX stays in the file as `` `\easy`{=latex} ``: replace it (e.g. by `[1]{.difficulty}`)
+   or delete it.
+2. **Macros** the source uses are collected in `_scratch/imported-macros.tex`: copy the ones
+   you need into `_shared/macros.tex` (the template's own, like `\dd` or `\bfx`, are left out).
+   A `.bib` file is copied to `_scratch/`: merge it into `notes/refs.bib`.
+3. **Notes**: put the chapter list the report prints into `notes/_quarto.yml`.
+4. **Read and build**: titles, notes such as "see the lecture notes", and anything laid out by
+   hand need a human eye.
 
-`--force` replaces an existing file (such as the stub the wizard created).
+`--force` replaces existing files (such as the stubs the wizard created). If the report warns
+that paragraphs seem to be missing, compare with the source and open an issue on the template.
 
 ## Template and module files
 

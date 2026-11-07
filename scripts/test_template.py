@@ -5,7 +5,7 @@
 """Test the copier template: generate modules from the working copy and build them.
 
 Sets: defaults (generate only), small (2 + 1 sheets, with a TikZ figure and a code cell
-added and a LaTeX sheet imported with scripts/import_latex.py; both builds; a planted leak
+added and a LaTeX sheet and LaTeX notes imported with scripts/import_latex.py; both builds; a planted leak
 must make the leak check fail, and a sheet among the notes the pages check), no-assignments (student build). Also run on Ubuntu and macOS by .github/workflows/test-template.yml.
 
     uv run scripts/test_template.py            all answer sets
@@ -78,6 +78,76 @@ LATEX_SHEET = r"""\documentclass{article}
 \end{enumerate}
 \end{document}
 """
+
+
+LATEX_NOTES = {
+    "main.tex": r"""\documentclass{book}
+\newtheorem{thm}{Theorem}[chapter]
+\newtheorem{assumption}{Assumption}
+\newcommand{\R}{\mathbb{R}}
+\begin{document}
+\frontmatter
+\maketitle
+A preface.
+\mainmatter
+\include{ch1}
+\input{ch2}
+\end{document}
+""",
+    "ch1.tex": r"""\chapter{First}\label{ch:first}
+\ifdefined\lecturerversion Only for the lecturer. \else For everyone. \fi
+\section{Energy}\label{sec:energy}
+\begin{equation}\label{eq:energy}
+E = m c^2, \quad x \in \R
+\end{equation}
+\begin{thm}[Main]\label{thm:main}
+By equation~\eqref{eq:energy}, $\dv{E}{m} = c^2$.
+\end{thm}
+\begin{proof}
+Differentiate.
+\end{proof}
+\begin{assumption}
+Things are nice.
+\end{assumption}
+""",
+    "ch2.tex": r"""\chapter{Second}
+See Theorem~\ref{thm:main} in Section~\ref{sec:energy}. \\
+\begin{mdframed}
+\begin{align}
+a &= b \label{eq:ab} \\
+c &= d
+\end{align}
+\end{mdframed}
+By \eqref{eq:ab}, done.
+""",
+}
+
+
+def import_latex_notes(dest: Path) -> list[str]:
+    """Import LATEX_NOTES as the notes (scripts/import_latex.py notes) and check the result."""
+    source = dest / "_scratch" / "old-notes"
+    source.mkdir(parents=True, exist_ok=True)
+    for name, text in LATEX_NOTES.items():
+        (source / name).write_text(text, encoding="utf-8")
+    run(["uv", "run", "scripts/import_latex.py", "notes", str(source / "main.tex"), "--force"], dest)
+    notes = dest / "notes"
+    text = "\n".join((notes / f"chapter{i}.qmd").read_text(encoding="utf-8") for i in (1, 2))
+    expected = ["# First {#sec-first}", "For everyone.", "{#eq-energy}", "::: {#thm-main}",
+                "## Main", "@eq-energy", "::: proof", "**Assumption.**", "@thm-main",
+                "@sec-energy", "{#eq-ab}", "@eq-ab", "\\begin{aligned}"]
+    problems = [f"import_latex notes: '{e}' missing" for e in expected if e not in text]
+    problems += [f"import_latex notes: '{u}' left" for u in ("{=latex}", "Only for the lecturer",
+                                                             "mdframed", "\\label") if u in text]
+    if "A preface." not in (dest / "_scratch" / "imported-preface.md").read_text(encoding="utf-8"):
+        problems.append("import_latex notes: preface not in _scratch/imported-preface.md")
+    # The review step: the chapter list and \R (here: the template's \mathbb{R})
+    quarto = notes / "_quarto.yml"
+    quarto.write_text(quarto.read_text(encoding="utf-8").replace(
+        "    - chapter1.qmd\n", "    - chapter1.qmd\n    - chapter2.qmd\n"), encoding="utf-8")
+    chapter1 = notes / "chapter1.qmd"
+    chapter1.write_text(chapter1.read_text(encoding="utf-8").replace("\\R", "\\mathbb{R}"),
+                        encoding="utf-8")
+    return problems
 
 
 def import_latex_sheet(dest: Path) -> list[str]:
@@ -187,12 +257,12 @@ def test(name: str) -> list[str]:
     run(["uvx", "copier", "copy", "--defaults", "--vcs-ref", "HEAD", *data,
          str(REPO), str(dest)], REPO)
     problems = check_layout(dest, answers)
-    if name == "small":
-        add_extras(dest)
     if builds:
         run(["uv", "sync"], dest)
         if name == "small":
             problems += import_latex_sheet(dest)
+            problems += import_latex_notes(dest)
+            add_extras(dest)
         for profile in builds:
             run(["uv", "run", "scripts/build.py", profile], dest)  # includes the leak check
     if name == "small":

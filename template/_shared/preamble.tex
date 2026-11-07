@@ -6,6 +6,18 @@
 % Colours (accent, alert, brand-*) are defined in generated/palette.tex, made from
 % palette.yml and included before this file.
 
+% Old font commands ({\bf ...}, {\it ...}), common in older LaTeX (and in MathJax): the
+% notes' KOMA class leaves them out; this defines them as article does
+\makeatletter
+\ifdefined\rm\else\DeclareOldFontCommand{\rm}{\normalfont\rmfamily}{\mathrm}\fi
+\ifdefined\sf\else\DeclareOldFontCommand{\sf}{\normalfont\sffamily}{\mathsf}\fi
+\ifdefined\tt\else\DeclareOldFontCommand{\tt}{\normalfont\ttfamily}{\mathtt}\fi
+\ifdefined\bf\else\DeclareOldFontCommand{\bf}{\normalfont\bfseries}{\mathbf}\fi
+\ifdefined\it\else\DeclareOldFontCommand{\it}{\normalfont\itshape}{\mathit}\fi
+\ifdefined\sl\else\DeclareOldFontCommand{\sl}{\normalfont\slshape}{\@nomath\sl}\fi
+\ifdefined\sc\else\DeclareOldFontCommand{\sc}{\normalfont\scshape}{\@nomath\sc}\fi
+\makeatother
+
 \usepackage{tcolorbox}
 \tcbuselibrary{most}
 
