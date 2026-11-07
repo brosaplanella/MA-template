@@ -71,8 +71,10 @@ jobs:
         # scripts/tikz.py calls pdflatex directly, so Quarto's automatic installs do not apply
         if: steps.tinytex.outputs.cache-hit != 'true'
         run: |
-          tlmgr update --self
-          tlmgr install standalone pgf dvisvgm
+          tlmgr=tlmgr
+          if [ "$RUNNER_OS" = "Windows" ]; then tlmgr=tlmgr.bat; fi   # bash needs the .bat
+          $tlmgr update --self
+          $tlmgr install standalone pgf dvisvgm
 
       - name: MuPDF tools (dvisvgm reads the figures' PDFs with mutool)
         run: |
@@ -83,6 +85,7 @@ jobs:
           else
             choco install mupdf --no-progress -y
           fi
+          mutool -v
 
       - uses: astral-sh/setup-uv@v6
 
