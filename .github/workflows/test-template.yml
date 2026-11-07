@@ -1,7 +1,7 @@
-# Generate modules from the template and build them on Linux and macOS
+# Generate modules from the template and build them on Linux, macOS and Windows
 # (scripts/test_template.py: three answer sets, both builds, leak check, a planted leak).
-# Windows is tested locally by the maintainers. Runs on pull requests that touch the
-# template, and by hand (Actions > Test template > Run workflow).
+# Runs on pull requests that touch the template, and by hand (Actions > Test template >
+# Run workflow).
 name: Test template
 
 on:
@@ -18,12 +18,16 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash   # also on Windows (Git Bash)
+
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     env:
@@ -45,6 +49,7 @@ jobs:
           path: |
             ~/.TinyTeX
             ~/Library/TinyTeX
+            ~/AppData/Roaming/TinyTeX
           key: tinytex-${{ runner.os }}-${{ hashFiles('.github/workflows/test-template.yml') }}
 
       - name: Install TinyTeX (no cache)
@@ -53,9 +58,12 @@ jobs:
 
       - name: TinyTeX on the PATH (Quarto finds it, but tikz.py calls pdflatex directly)
         run: |
-          tlmgr=$(find "$HOME/.TinyTeX" "$HOME/Library/TinyTeX" -name tlmgr -path "*/bin/*" 2>/dev/null | head -n 1)
-          echo "TinyTeX binaries: $(dirname "$tlmgr")"
-          dirname "$tlmgr" >> "$GITHUB_PATH"
+          tlmgr=$(find "$HOME/.TinyTeX" "$HOME/Library/TinyTeX" "$HOME/AppData/Roaming/TinyTeX" \
+            \( -name tlmgr -o -name tlmgr.bat \) -path "*/bin/*" 2>/dev/null | head -n 1)
+          bin=$(dirname "$tlmgr")
+          if [ "$RUNNER_OS" = "Windows" ]; then bin=$(cygpath -w "$bin"); fi
+          echo "TinyTeX binaries: $bin"
+          echo "$bin" >> "$GITHUB_PATH"
 
       - name: LaTeX packages for TikZ figures (no cache)
         # scripts/tikz.py calls pdflatex directly, so Quarto's automatic installs do not apply
@@ -68,8 +76,10 @@ jobs:
         run: |
           if [ "$RUNNER_OS" = "macOS" ]; then
             brew install mupdf-tools
-          else
+          elif [ "$RUNNER_OS" = "Linux" ]; then
             sudo apt-get update && sudo apt-get install -y mupdf-tools
+          else
+            choco install mupdf --no-progress -y
           fi
 
       - uses: astral-sh/setup-uv@v6
