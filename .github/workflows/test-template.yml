@@ -58,8 +58,10 @@ jobs:
 
       - name: TinyTeX on the PATH (Quarto finds it, but tikz.py calls pdflatex directly)
         run: |
-          tlmgr=$(find "$HOME/.TinyTeX" "$HOME/Library/TinyTeX" "$HOME/AppData/Roaming/TinyTeX" \
-            \( -name tlmgr -o -name tlmgr.bat \) -path "*/bin/*" 2>/dev/null | head -n 1)
+          # (only one of these folders exists; find's error for the others is expected)
+          tlmgr=$( (find "$HOME/.TinyTeX" "$HOME/Library/TinyTeX" "$HOME/AppData/Roaming/TinyTeX" \
+            \( -name tlmgr -o -name tlmgr.bat \) -path "*/bin/*" 2>/dev/null || true) | head -n 1)
+          if [ -z "$tlmgr" ]; then echo "::error::TinyTeX's tlmgr not found"; exit 1; fi
           bin=$(dirname "$tlmgr")
           if [ "$RUNNER_OS" = "Windows" ]; then bin=$(cygpath -w "$bin"); fi
           echo "TinyTeX binaries: $bin"
